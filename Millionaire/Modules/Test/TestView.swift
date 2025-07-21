@@ -8,8 +8,16 @@
 import SwiftUI
 
 struct TestView: View {
+    @StateObject private var viewModel = TestViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text( "\(viewModel.counter)" )
+            
+            Button("increment") {
+                viewModel.increment()
+            }
+        }
     }
 }
 
