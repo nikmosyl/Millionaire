@@ -11,6 +11,7 @@ struct MainButton: View {
     var title: String
     var action: () -> Void
     
+    
     var body: some View {
         Button(action: action) {
             Text(title)
@@ -52,3 +53,6 @@ struct ArrowShapeButton: Shape {
 #Preview {
     MainButton(title: "title", action: {})
 }
+
+
+// через ViewBilder сздать динамический компонент
