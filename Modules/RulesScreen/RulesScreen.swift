@@ -17,7 +17,11 @@ import SwiftUI
                 VStack(alignment:.leading) {
                     
                     HStack {
+<<<<<<< HEAD
                         NavigationLink(destination: HomeView().navigationBarBackButtonHidden(true), label: {
+=======
+                        NavigationLink(destination: HomeView(), label: {
+>>>>>>> fa6a2e5d939c20642fab0868a2c16757fc5f6670
                             Image(systemName: "chevron.left")
                                 .font(.title)
                             
