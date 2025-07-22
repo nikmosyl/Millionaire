@@ -11,6 +11,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		017743592E2FE56E003F62FC /* Modules */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Modules;
+			sourceTree = "<group>";
+		};
 		11757ECA2E2E7BB1008656FC /* Millionaire */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Millionaire;
@@ -33,6 +38,7 @@
 			isa = PBXGroup;
 			children = (
 				11757ECA2E2E7BB1008656FC /* Millionaire */,
+				017743592E2FE56E003F62FC /* Modules */,
 				11757EC92E2E7BB1008656FC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,6 +67,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				017743592E2FE56E003F62FC /* Modules */,
 				11757ECA2E2E7BB1008656FC /* Millionaire */,
 			);
 			name = Millionaire;
