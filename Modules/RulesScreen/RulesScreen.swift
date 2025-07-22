@@ -7,36 +7,6 @@
 
 import SwiftUI
     
-struct ContentView: View {
-    
-    var body: some View {
-        NavigationView {
-           ZStack {
-               LinearGradient(gradient: Gradient(colors: [.blue, .black, .blue]), startPoint: .topLeading, endPoint: .bottomTrailing)
-                   .ignoresSafeArea()
-               VStack {
-                   NavigationLink(destination: RoolesScreen(), label: {
-                       Image(systemName: "questionmark.circle.fill")
-                           .font(.largeTitle)
-                           .foregroundColor(.white)
-                           
-                   })
-                   .padding(.leading, 300.0)
-                   Spacer()
-                       
-               }
-               
-            }
-          
-        }.navigationBarBackButtonHidden(true)
-                
-            
-        }
-        }
-    
-    
-
-
 
     struct RoolesScreen: View {
    
@@ -47,7 +17,7 @@ struct ContentView: View {
                 VStack(alignment:.leading) {
                     
                     HStack {
-                        NavigationLink(destination: ContentView(), label: {
+                        NavigationLink(destination: HomeView().navigationBarBackButtonHidden(true), label: {
                             Image(systemName: "chevron.left")
                                 .font(.title)
                             
@@ -114,5 +84,5 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    RoolesScreen()
 }
