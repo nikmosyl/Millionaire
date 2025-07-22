@@ -10,12 +10,11 @@ import SwiftUI
 struct QuestionView: View {
     @StateObject private var viewModel = QuestionViewModel()
     
-    
     var body: some View {
         NavigationStack {
             VStack {
+                // MARK: - Timer + Question
                 VStack(spacing: 30) {
-                    // Timer
                     Text("⏱ \(viewModel.timeRemaining)")
                         .font(.title)
                         .padding(.vertical, 4)
@@ -23,17 +22,13 @@ struct QuestionView: View {
                         .background(Color.blue.opacity(0.2))
                         .clipShape(Capsule())
                     
-                    
-                    // Question
                     Text(viewModel.question.question)
                         .font(.title2)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 }
                 
-                Spacer()
-                
-                // Answers
+                // MARK: - Answers
                 VStack(spacing: 16) {
                     ForEach(viewModel.question.answers.indices, id: \.self) { index in
                         Button(action: {
@@ -43,50 +38,43 @@ struct QuestionView: View {
                                 Text("\(String(UnicodeScalar(65 + index)!)).")
                                     .foregroundColor(Color(hex: "E19B30"))
                                     .font(.system(size: 18, weight: .semibold))
-
+                                
                                 Text(viewModel.question.answers[index])
                                     .foregroundColor(.white)
                                     .font(.system(size: 18, weight: .semibold))
-
-                                Spacer()
                                 
+                                Spacer()
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(viewModel.isAnswerChecked && index == viewModel.question.correctIndex
-                                          ? Color.green // Temporary Color
+                                          ? Color.green
                                           : Color.clear
-                                    )
+                                         )
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 12)
                                             .stroke(Color.white, lineWidth: 3)
                                     )
                             )
-                            
                         }
                         .padding(.horizontal)
                     }
                 }
+                .padding(.top, 24)
                 
+                // Push hints bar to bottom
                 Spacer()
+              
                 
-                // Lifelines
-                HStack(spacing: 24) {
-                    Circle().overlay(Text("50:50").font(.footnote))
-                        .frame(width: 48, height: 48)
-                    Circle().overlay(Image(systemName: "person.3"))
-                        .frame(width: 48, height: 48)
-                    Circle().overlay(Image(systemName: "phone"))
-                        .frame(width: 48, height: 48)
-                }
-                .foregroundColor(.white.opacity(0.9))
-                .padding(.bottom)
+                HintsBarView()
+                    .padding(.bottom, 20)
             }
-            .padding()
+            .frame(maxHeight: .infinity)
+            .padding(.top)
+            .background(Color(red: 0.07, green: 0.11, blue: 0.25).ignoresSafeArea())
             .toolbar {
-                // Back
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         // TODO: Add navigation back logic
@@ -95,8 +83,7 @@ struct QuestionView: View {
                             .foregroundColor(.white)
                     }
                 }
-                
-                // Title
+
                 ToolbarItem(placement: .principal) {
                     VStack(spacing: 2) {
                         Text("QUESTION #1")
@@ -107,8 +94,7 @@ struct QuestionView: View {
                             .foregroundColor(.white)
                     }
                 }
-                
-                // Settings
+
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         // TODO: Open settings
@@ -118,14 +104,12 @@ struct QuestionView: View {
                     }
                 }
             }
-            
             .navigationBarBackButtonHidden(true)
-            .background(Color(red: 0.07, green: 0.11, blue: 0.25).ignoresSafeArea())
             .foregroundColor(.white)
-            
         }
     }
 }
+
 
 
 // MARK: - Color+Hex
