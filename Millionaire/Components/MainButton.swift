@@ -7,93 +7,84 @@
 
 import SwiftUI
 
-struct MainButton: View {
+struct MainButton<Content: View>: View {
+    let action: () -> Void
+    let content: Content
+    let style: ColorGradientButton
     
-    //MARK: выбираем вид заголовка для кнопки
-    enum Content {
-        case title(String)
-        case doubleTitle(String, String)
-        case doubleTitleSpaser(String, String)
+    init( style: ColorGradientButton = .darkBlue,
+          action: @escaping () -> Void,
+          @ViewBuilder content: () -> Content)
+    {
+        self.action = action
+        self.content = content()
+        self.style = style
     }
     
-    //MARK: Передаем в кнопку заголовок + цвет + действие
-    let content: Content
-    var action: () -> Void
-    var style: ColorGradientButton
-    
-    //MARK: тело кнопки
     var body: some View {
         Button(action: action) {
-            
-            //MARK: через кейсы задаем нужный вид кнопки
-            switch content {
-                
-            case .title(let title):
-                Text(title)
-                    .font(.system(size: 24, weight: .bold))
-                    .frame(maxWidth: .infinity)
-                    .foregroundStyle(.white)
-                    .padding(.vertical, 16)
-                
-            case .doubleTitle(let leftTitle, let rightTitle):
-                HStack {
-                    Text(leftTitle)
-                        .foregroundStyle(.yellow1)
-                        .padding(.leading, 24)
-                    Text(rightTitle)
-                        .foregroundStyle(.white)
-                    Spacer()
-                }
-                .font(.system(size: 18, weight: .bold))
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 16)
-                
-            case .doubleTitleSpaser(let leftTitle, let rightTitle):
-                HStack {
-                    Text(leftTitle)
-                    Spacer()
-                    Text(rightTitle)
-                }
-                .font(.system(size: 18, weight: .bold))
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 24)
-            }
+            content
+                .padding()
+                .background(
+                    ArrowShapeButton()
+                        .fill(style.gradient)
+                )
+                .overlay(
+                    ArrowShapeButton()
+                        .stroke(Color.white, lineWidth: 3)
+                )
         }
-        .background(
-            ArrowShapeButton()
-                .fill(style.gradient)
-        )
-        .overlay(
-            ArrowShapeButton()
-                .stroke(Color.white, lineWidth: 3)
-        )
-        .padding(.horizontal, 32)
     }
 }
 
-//MARK: рисуем форму кнопки
 struct ArrowShapeButton: Shape {
     
     func path(in rect: CGRect) -> Path {
-        
         var path = Path()
-        let inset: CGFloat = rect.height * 0.5
-
-        path.move(to: CGPoint(x: inset, y: 0))
-        path.addLine(to: CGPoint(x: rect.width - inset, y: 0))
-        path.addLine(to: CGPoint(x: rect.width, y: rect.height / 2))
-        path.addLine(to: CGPoint(x: rect.width - inset, y: rect.height))
-        path.addLine(to: CGPoint(x: inset, y: rect.height))
-        path.addLine(to: CGPoint(x: 0, y: rect.height / 2))
+        
+        func point(_ x: CGFloat, _ y: CGFloat) -> CGPoint {
+            return CGPoint(x: x * rect.width, y: y * rect.height)
+        }
+        
+        path.move(to: point(0.8818, 0.022))
+        
+        path.addCurve(to: point(0.9352, 0.1454),
+                      control1: point(0.9028, 0.022),
+                      control2: point(0.9223, 0.0676))
+        
+        path.addLine(to: point(0.9914, 0.4865))
+        path.addLine(to: point(0.9936, 0.5))
+        path.addLine(to: point(0.9914, 0.5135))
+        
+        path.addLine(to: point(0.9352, 0.8546))
+        
+        path.addCurve(to: point(0.8818, 0.9779),
+                      control1: point(0.9223, 0.9324),
+                      control2: point(0.9028, 0.978))
+        
+        path.addLine(to: point(0.1182, 0.978))
+        
+        path.addCurve(to: point(0.0648, 0.8546),
+                      control1: point(0.0972, 0.978),
+                      control2: point(0.0777, 0.9324))
+        
+        path.addLine(to: point(0.0086, 0.5135))
+        path.addLine(to: point(0.0066, 0.5))
+        path.addLine(to: point(0.0086, 0.4865))
+        
+        path.addLine(to: point(0.0648, 0.1454))
+        
+        path.addCurve(to: point(0.1182, 0.022),
+                      control1: point(0.0777, 0.0676),
+                      control2: point(0.0972, 0.022))
+        
+        path.addLine(to: point(0.8818, 0.022))
         path.closeSubpath()
-                
+        
         return path
     }
 }
 
-//MARK: выбор цвета кнопки
 enum ColorGradientButton {
     case yellow
     case blue
@@ -101,7 +92,6 @@ enum ColorGradientButton {
     case red
     case darkBlue
     
-    //MARK: через кейсы задаем нужный массив цветов
     var colors: [Color] {
         switch self {
         case .yellow:
@@ -117,7 +107,6 @@ enum ColorGradientButton {
         }
     }
     
-    //MARK: направление градиента
     var gradient: LinearGradient {
         LinearGradient(colors: self.colors,
                        startPoint: .top,
@@ -127,5 +116,10 @@ enum ColorGradientButton {
 
 
 #Preview {
-    MainButton(content: .title("Hello world!"), action: { }, style: .darkBlue)
+    MainButton(style: .darkBlue, action: {}) {
+        Text("Hello")
+            .font(.system(size: 24, weight: .bold))
+            .foregroundStyle(.white)
+            .frame(width: 300, height: 60)
+    }
 }
