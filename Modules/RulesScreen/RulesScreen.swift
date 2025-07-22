@@ -47,7 +47,7 @@ struct ContentView: View {
                 VStack(alignment:.leading) {
                     
                     HStack {
-                        NavigationLink(destination: ContentView(), label: {
+                        NavigationLink(destination: HomeView(), label: {
                             Image(systemName: "chevron.left")
                                 .font(.title)
                             

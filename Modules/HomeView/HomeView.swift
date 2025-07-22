@@ -94,17 +94,13 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        print("Rules tapped")
-                    } label: {
-                        Image(systemName: "questionmark.circle")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding()
-                            .foregroundStyle(.white)
-                    }
-                }
+                NavigationLink(destination: RoolesScreen(), label: { Image(systemName: "questionmark.circle")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .padding()
+                    .foregroundStyle(.white)
+                        
+                }).navigationBarBackButtonHidden(true)
             }
         }
     }
