@@ -94,7 +94,7 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .toolbar {
-                NavigationLink(destination: RoolesScreen(), label: { Image(systemName: "questionmark.circle")
+                NavigationLink(destination: RulesScreen(), label: { Image(systemName: "questionmark.circle")
                     .resizable()
                     .frame(width: 24, height: 24)
                     .padding()
