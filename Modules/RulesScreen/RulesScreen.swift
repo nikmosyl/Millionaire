@@ -58,11 +58,9 @@ import SwiftUI
                                 «Помощь зала» — зрители, пришедшие посмотреть игру, подсказывают свои варианты ответов, которые при желании можно принять.
                                 
                                 Остановка игры: в любой момент можно остановить игру и забрать заработанные на данный момент деньги.
-                                """).font(.title)
-                                .italic(true)
+                                """).font(.system(size: 20, weight: .regular, design: .serif))
                                 .foregroundColor(.white)
-                                .multilineTextAlignment(.leading)
-                                .padding()
+                                .padding(10)
                                 
                         }
                     }
