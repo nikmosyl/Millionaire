@@ -5,8 +5,6 @@
 //  Created by nikita on 23.07.2025.
 //
 
-import Foundation
-
 struct ApiResponseEvent: Decodable {
     let responseCode: Int
     let results: [Question]
