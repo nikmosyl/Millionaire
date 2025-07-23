@@ -12,13 +12,13 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack{
-            VStack(spacing: 30) {
+            VStack(spacing: 16) {
                 Spacer()
                 
                 Image("logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 160)
+                    .frame(height: 195)
                 
                 Text("Who Wants\nto be a Millionaire")
                     .font(.title)
