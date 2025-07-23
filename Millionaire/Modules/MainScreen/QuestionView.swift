@@ -12,67 +12,84 @@ struct QuestionView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                // MARK: - Timer + Question
-                VStack(spacing: 30) {
-                    Text("⏱ \(viewModel.timeRemaining)")
-                        .font(.title)
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 16)
-                        .background(Color.blue.opacity(0.2))
-                        .clipShape(Capsule())
-                    
-                    Text(viewModel.question.question)
-                        .font(.title2)
+            VStack(spacing: 24) {
+                // MARK: - Timer
+                Label {
+                    Text("\(viewModel.timeRemaining)")
+                        .font(.system(size: 24, weight: .semibold))
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+
+                } icon: {
+                    Image(systemName: "timer")
+                        .font(.system(size: 24, weight: .semibold))
                 }
-                
-                // MARK: - Answers
-                VStack(spacing: 16) {
-                    ForEach(viewModel.question.answers.indices, id: \.self) { index in
-                        Button(action: {
-                            viewModel.selectAnswer(index)
-                        }) {
-                            HStack(spacing: 8) {
-                                Text("\(String(UnicodeScalar(65 + index)!)).")
-                                    .foregroundColor(Color(hex: "E19B30"))
-                                    .font(.system(size: 18, weight: .semibold))
-                                
-                                Text(viewModel.question.answers[index])
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 18, weight: .semibold))
-                                
-                                Spacer()
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(viewModel.isAnswerChecked && index == viewModel.question.correctIndex
-                                          ? Color.green
-                                          : Color.clear
-                                         )
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .stroke(Color.white, lineWidth: 3)
-                                    )
-                            )
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-                .padding(.top, 24)
-                
-                // Push hints bar to bottom
-                Spacer()
+                .foregroundColor(.white)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
+                .background(Color.blue.opacity(0.2))
+                .clipShape(Capsule())
+
               
+                // MARK: - Question + Spacer
+                VStack() {
+                    Text(viewModel.question.question)
+                        .font(.system(size: 24))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                    
+                    Spacer()
+
+                }
+                .frame(height: 147)
                 
-                HintsBarView()
-                    .padding(.bottom, 20)
+                
+                // MARK: - Answers + Hints
+                VStack(spacing: 40) {
+                    
+                    // MARK: - Answers
+                    VStack(spacing: 16) {
+                        ForEach(viewModel.question.answers.indices, id: \.self) { index in
+                            Button(action: {
+                                viewModel.selectAnswer(index)
+                            }) {
+                                HStack(spacing: 8) {
+                                    Text("\(String(UnicodeScalar(65 + index)!)).")
+                                        .foregroundColor(Color(hex: "E19B30"))
+                                        .font(.system(size: 18, weight: .semibold))
+                                    
+                                    Text(viewModel.question.answers[index])
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 18, weight: .semibold))
+                                    
+                                    Spacer()
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(viewModel.isAnswerChecked && index == viewModel.question.correctIndex
+                                              ? Color.green
+                                              : Color.clear
+                                             )
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 12)
+                                                .stroke(Color.white, lineWidth: 3)
+                                        )
+                                )
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    // MARK: - Hints
+                    HintsBarView()
+                }
+                .padding(.bottom, 60)
+                
             }
-            .frame(maxHeight: .infinity)
-            .padding(.top)
+            .padding(.bottom)
             .background(Color(red: 0.07, green: 0.11, blue: 0.25).ignoresSafeArea())
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
