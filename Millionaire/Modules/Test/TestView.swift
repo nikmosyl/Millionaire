@@ -19,6 +19,30 @@ struct TestView: View {
                     .frame(height:50)
             }
             .padding()
+            
+            HStack {
+                Button("easy") {
+                    viewModel.getQuestion(difficlulty: .easy)
+                }
+                
+                Button("medium") {
+                    viewModel.getQuestion(difficlulty: .medium)
+                }
+                
+                Button("hard") {
+                    viewModel.getQuestion(difficlulty: .hard)
+                }
+            }
+            
+            Text("\(viewModel.question?.title ?? "question")")
+                .font(.largeTitle)
+            Text("\(viewModel.question?.correctAnswer ?? "answer    ")")
+            
+            if let question = viewModel.question {
+                ForEach(question.incorrectAnswers, id: \.self) { answer in
+                    Text(answer)
+                }
+            }
         }
     }
 }
