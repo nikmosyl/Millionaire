@@ -8,15 +8,12 @@
 import Foundation
 import SwiftUI
 
-
 class HomeViewModel: ObservableObject {
-    
     @Published var gameState: GameState
     
     init() {
         self.gameState = GameState(bestScore: 15000, continueGame: true)
     }
-    
     
     func startNewGame() {
         gameState.continueGame = false
@@ -26,6 +23,4 @@ class HomeViewModel: ObservableObject {
     func continGame() {
         print("Continuing existing game")
     }
-    
-    
 }
