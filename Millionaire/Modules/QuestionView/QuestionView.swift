@@ -18,7 +18,6 @@ struct QuestionView: View {
                     Text("\(viewModel.timeRemaining)")
                         .font(.system(size: 24, weight: .semibold))
                         .multilineTextAlignment(.center)
-
                 } icon: {
                     Image(systemName: "timer")
                         .font(.system(size: 24, weight: .semibold))
@@ -28,7 +27,6 @@ struct QuestionView: View {
                 .padding(.horizontal, 16)
                 .background(Color.blue.opacity(0.2))
                 .clipShape(Capsule())
-
               
                 // MARK: - Question + Spacer
                 VStack() {
@@ -38,10 +36,8 @@ struct QuestionView: View {
                         .padding(.horizontal, 32)
                     
                     Spacer()
-
                 }
                 .frame(height: 147)
-                
                 
                 // MARK: - Answers + Hints
                 VStack(spacing: 40) {
@@ -84,16 +80,24 @@ struct QuestionView: View {
                     Spacer()
                     
                     // MARK: - Hints
-                    HintsBarView()
+                    HintsBarView(
+                        onFiftyFifty: { viewModel.useFiftyFifty() },
+                        onAudience: { viewModel.askAudience() },
+                        onPhone: { viewModel.callFriend() },
+                        onHeart: { viewModel.useExtraLife() }
+                    )
                 }
                 .padding(.bottom, 60)
                 
             }
             .padding(.bottom)
-            .background(Color(red: 0.07, green: 0.11, blue: 0.25).ignoresSafeArea())
+            .background(
+                Color(red: 0.07, green: 0.11, blue: 0.25).ignoresSafeArea()
+            )
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
+                    Button(
+                        action: {
                         // TODO: Add navigation back logic
                     }) {
                         Image(systemName: "chevron.left")
@@ -126,7 +130,6 @@ struct QuestionView: View {
         }
     }
 }
-
 
 
 // MARK: - Color+Hex

@@ -19,7 +19,9 @@ final class QuestionViewModel: ObservableObject {
     
     init() {
         self.question = QuestionModel(
-            question: "What year was the year, when first deodorant was invented in our life?",
+            question: """
+            What year was the year, when first deodorant was invented in our life?
+            """,
             answers: [
                 "First answer option",
                 "Second answer option",
@@ -33,12 +35,31 @@ final class QuestionViewModel: ObservableObject {
 
     }
     
-    
     func selectAnswer(_ index: Int) {
         selectedAnswer = index
         isAnswerChecked = true
     }
     
+    // MARK: - Hints
+    func useFiftyFifty() {
+        print("👉 50:50 hint used")
+        // TODO: implement logic
+    }
+
+    func askAudience() {
+        print("🧑‍🤝‍🧑 Audience hint used")
+        // TODO: implement logic
+    }
+
+    func callFriend() {
+        print("📞 Phone a friend used")
+        // TODO: implement logic
+    }
+
+    func useExtraLife() {
+        print("❤️ Extra life used")
+        // TODO: implement logic
+    }
     
     // MARK: - Timer
     
