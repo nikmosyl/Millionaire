@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct QuestionView: View {
+    @Environment(\.dismiss) private var dismiss
+
     @StateObject private var viewModel = QuestionViewModel()
     
     var body: some View {
@@ -98,9 +100,9 @@ struct QuestionView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(
                         action: {
-                        // TODO: Add navigation back logic
+                            dismiss()
                     }) {
-                        Image(systemName: "chevron.left")
+                        Image(systemName: "arrow.backward")
                             .foregroundColor(.white)
                     }
                 }
@@ -120,7 +122,7 @@ struct QuestionView: View {
                     Button(action: {
                         // TODO: Open settings
                     }) {
-                        Image(systemName: "gearshape")
+                        Image(systemName: "line.3.horizontal")
                             .foregroundColor(.white)
                     }
                 }
