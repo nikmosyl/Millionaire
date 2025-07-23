@@ -16,6 +16,7 @@ struct LevelListView: View {
             VStack(spacing: 0) {
                 Image(.logo)
                     .resizable()
+                    .aspectRatio(contentMode: .fill)
                     .frame(width: 85, height: 85)
                     .zIndex(1)
                     .offset(y: 15)
