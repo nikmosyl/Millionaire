@@ -24,7 +24,7 @@ struct MainButton<Content: View>: View {
     var body: some View {
         Button(action: action) {
             content
-                .padding()
+                .frame(maxWidth: .infinity)
                 .background(
                     ArrowShapeButton()
                         .fill(style.gradient)
@@ -38,7 +38,6 @@ struct MainButton<Content: View>: View {
 }
 
 struct ArrowShapeButton: Shape {
-    
     func path(in rect: CGRect) -> Path {
         var path = Path()
         
