@@ -12,11 +12,13 @@ struct TestView: View {
     
     var body: some View {
         VStack {
-            Text( "\(viewModel.counter)" )
-            
-            Button("increment") {
+            MainButton(style: viewModel.counter % 2 == 0 ? .darkBlue : .green) {
                 viewModel.increment()
+            } content: {
+                Text("\(viewModel.counter)")
+                    .frame(height:50)
             }
+            .padding()
         }
     }
 }
