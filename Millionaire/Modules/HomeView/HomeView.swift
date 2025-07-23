@@ -7,21 +7,18 @@
 
 import SwiftUI
 
-
 struct HomeView: View {
-    
     @StateObject private var viewModel = HomeViewModel()
     
     var body: some View {
         NavigationStack{
-            
-            VStack(spacing: 30) {
+            VStack(spacing: 16) {
                 Spacer()
                 
                 Image("logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(height: 160)
+                    .frame(height: 195)
                 
                 Text("Who Wants\nto be a Millionaire")
                     .font(.title)
@@ -41,9 +38,11 @@ struct HomeView: View {
                             Text("$\(viewModel.gameState.bestScore)")
                                 .foregroundStyle(.white)
                                 .font(.title)
+                                .fontWeight(.semibold)
                         }
                     }
                 }
+                
                 Spacer()
                 
                 if viewModel.gameState.continueGame {
@@ -85,7 +84,6 @@ struct HomeView: View {
                             .fontWeight(.bold)
                     }
                     .padding(.horizontal)
-                    
                 }
                 Spacer(minLength: 20)
             }
