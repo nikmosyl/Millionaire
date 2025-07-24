@@ -9,8 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
-    @State private var showRules = false
-    
+    @State private var navigateToQuestion = false
+
     var body: some View {
         NavigationStack{
             VStack(spacing: 16) {
@@ -49,6 +49,7 @@ struct HomeView: View {
                 if viewModel.gameState.continueGame {
                     Button {
                         viewModel.continGame()
+                        navigateToQuestion = false
                     } label: {
                         Text("Continue Game")
                             .frame(maxWidth: .infinity)
@@ -62,6 +63,7 @@ struct HomeView: View {
                     
                     Button {
                         viewModel.startNewGame()
+                        navigateToQuestion = true
                     } label: {
                         Text("New Game")
                             .frame(maxWidth: .infinity)
@@ -93,23 +95,25 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .toolbar {
-                Button {
-                    showRules = true
-                } label: {
-                    Image(systemName: "questionmark.circle")
-                        .resizable()
-                        .frame(width: 24, height: 24)
-                        .padding()
-                        .foregroundStyle(.white)
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        print("Rules tapped")
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .padding()
+                            .foregroundStyle(.white)
+                    }
                 }
             }
-            .sheet(isPresented: $showRules) {
-                Rules()
-                    .presentationDetents([.large])
+            .navigationDestination(isPresented: $navigateToQuestion) {
+                QuestionView()
             }
         }
     }
 }
+
 #Preview {
     HomeView()
         .preferredColorScheme(.dark)
