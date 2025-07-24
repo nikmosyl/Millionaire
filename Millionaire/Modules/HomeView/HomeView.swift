@@ -9,7 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
-    
+    @State private var navigateToQuestion = false
+
     var body: some View {
         NavigationStack{
             VStack(spacing: 16) {
@@ -48,6 +49,7 @@ struct HomeView: View {
                 if viewModel.gameState.continueGame {
                     Button {
                         viewModel.continGame()
+                        navigateToQuestion = false
                     } label: {
                         Text("Continue Game")
                             .frame(maxWidth: .infinity)
@@ -61,6 +63,7 @@ struct HomeView: View {
                     
                     Button {
                         viewModel.startNewGame()
+                        navigateToQuestion = true
                     } label: {
                         Text("New Game")
                             .frame(maxWidth: .infinity)
@@ -103,6 +106,9 @@ struct HomeView: View {
                             .foregroundStyle(.white)
                     }
                 }
+            }
+            .navigationDestination(isPresented: $navigateToQuestion) {
+                QuestionView()
             }
         }
     }

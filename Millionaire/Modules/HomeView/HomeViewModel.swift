@@ -11,11 +11,15 @@ class HomeViewModel: ObservableObject {
     @Published var gameState: GameState
     
     init() {
-        self.gameState = GameState(bestScore: 15000, continueGame: true)
+        self.gameState = GameState(bestScore: 15000, continueGame: true, newGame: false)
     }
     
     func startNewGame() {
-        gameState.continueGame = false
+        gameState = GameState(
+                bestScore: gameState.bestScore,
+                continueGame: true,
+                newGame: true
+            )
         print("New game started")
     }
     
