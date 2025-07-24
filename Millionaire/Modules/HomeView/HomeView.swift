@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
+    @State private var showRules = false
     
     var body: some View {
         NavigationStack{
@@ -92,18 +93,23 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .toolbar {
-                NavigationLink(destination: RulesScreen(), label: { Image(systemName: "questionmark.circle")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .padding()
-                    .foregroundStyle(.white)
-                        
-                }).navigationBarBackButtonHidden(true)
+                Button {
+                    showRules = true
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .padding()
+                        .foregroundStyle(.white)
+                }
+            }
+            .sheet(isPresented: $showRules) {
+                Rules()
+                    .presentationDetents([.large])
             }
         }
     }
 }
-
 #Preview {
     HomeView()
         .preferredColorScheme(.dark)
