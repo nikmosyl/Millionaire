@@ -96,16 +96,18 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .toolbar {
-                        Button {
-                            showRules = true
-                        } label: {
-                            Image(systemName: "questionmark.circle")
-                                .resizable()
-                                .frame(width: 24, height: 24)
-                                .padding()
-                                .foregroundStyle(.white)
-                        }
-                    }
+                Button {
+                    showRules = true
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .padding()
+                        .foregroundStyle(.white)
+                }
+            }.navigationDestination(isPresented: $navigateToQuestion) {
+                QuestionView()
+            }
             .sheet(isPresented: $showRules) {
                 Rules()
                     .presentationDetents([.large])
