@@ -47,44 +47,41 @@ struct HomeView: View {
                 Spacer()
                 
                 if viewModel.gameState.continueGame {
-                    Button {
+                    MainButton(style: .yellow) {
                         viewModel.continGame()
                         navigateToQuestion = false
-                    } label: {
+                    } content: {
                         Text("Continue Game")
-                            .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.yellow)
-                            .cornerRadius(12)
-                            .foregroundStyle(.black)
-                            .fontWeight(.bold)
+                            .frame(width: 311, height: 62)
+                            .foregroundStyle(.white)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 24))
+                            
                     }
                     .padding(.horizontal)
                     
-                    Button {
+                    MainButton(style: .darkBlue) {
                         viewModel.startNewGame()
                         navigateToQuestion = true
-                    } label: {
+                    } content: {
                         Text("New Game")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.green)
-                            .cornerRadius(12)
+                            .frame(width: 311, height: 62)
                             .foregroundStyle(.white)
-                            .fontWeight(.bold)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 24))
                     }
                     .padding(.horizontal)
                 } else {
-                    Button {
+                    MainButton(style: .darkBlue) {
                         viewModel.startNewGame()
-                    } label: {
+                        navigateToQuestion = true
+                    } content: {
                         Text("New Game")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.green)
-                            .cornerRadius(12)
+                            .frame(width: 311, height: 62)
                             .foregroundStyle(.white)
-                            .fontWeight(.bold)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 24))
                     }
                     .padding(.horizontal)
                 }
