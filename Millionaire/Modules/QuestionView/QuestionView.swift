@@ -12,6 +12,8 @@ struct QuestionView: View {
 
     @StateObject private var viewModel = QuestionViewModel()
     
+    @State private var showLevels = false
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
@@ -120,12 +122,15 @@ struct QuestionView: View {
 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        // TODO: Open settings
+                        showLevels = true
                     }) {
                         Image(systemName: "line.3.horizontal")
                             .foregroundColor(.white)
                     }
                 }
+            }
+            .navigationDestination(isPresented: $showLevels) {
+                LevelListView(selectedButton: 0)
             }
             .navigationBarBackButtonHidden(true)
             .foregroundColor(.white)
