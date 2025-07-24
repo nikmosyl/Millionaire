@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LevelListView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     let buttons = LevelListModel.buttons
     let selectedButton: Int
     
@@ -41,7 +43,18 @@ struct LevelListView: View {
                 LinearGradient(colors: [Color.blue.opacity(0.9), Color.black], startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
             )
+            .navigationBarBackButtonHidden(true)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(
+                        action: {
+                            dismiss()
+                    }) {
+                        Image(systemName: "arrow.backward")
+                            .foregroundColor(.white)
+                    }
+                }
+                
                 ToolbarItem {
                     Button(action: {
                         // action
