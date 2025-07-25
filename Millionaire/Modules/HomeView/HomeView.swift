@@ -49,7 +49,7 @@ struct HomeView: View {
                 
                 if viewModel.gameState.continueGame {
                     MainButton(style: .yellow) {
-                        viewModel.continGame()
+                        viewModel.continueGame()
                         navigateToQuestion = false
                     } content: {
                         Text("Continue Game")
