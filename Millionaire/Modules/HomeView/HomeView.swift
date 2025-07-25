@@ -105,11 +105,12 @@ struct HomeView: View {
                         .padding()
                         .foregroundStyle(.white)
                 }
-            }.navigationDestination(isPresented: $navigateToQuestion) {
+            }
+            .navigationDestination(isPresented: $navigateToQuestion) {
                 QuestionView()
             }
             .sheet(isPresented: $showRules) {
-                Rules()
+                RulesView()
                     .presentationDetents([.large])
             }
         }

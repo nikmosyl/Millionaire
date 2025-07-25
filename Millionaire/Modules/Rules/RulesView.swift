@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Rules: View {
+struct RulesView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = RulesViewModel()
     
@@ -76,6 +76,6 @@ struct Rules: View {
 }
 
 #Preview {
-    Rules()
+    RulesView()
         .preferredColorScheme(.dark)
 }

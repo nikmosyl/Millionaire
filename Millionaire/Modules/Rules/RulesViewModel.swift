@@ -64,8 +64,8 @@ class RulesViewModel: ObservableObject {
     ]
     
     struct RulesSection: Identifiable {
-            let id: UUID
-            let title: String
-            let content: String
-        }
+        let id: UUID
+        let title: String
+        let content: String
+    }
 }
