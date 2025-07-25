@@ -9,9 +9,7 @@ import SwiftUI
 
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
-
     @StateObject private var viewModel = QuestionViewModel()
-    
     @State private var showLevels = false
     
     var body: some View {
@@ -31,7 +29,7 @@ struct QuestionView: View {
                 .padding(.horizontal, 16)
                 .background(Color.blue.opacity(0.2))
                 .clipShape(Capsule())
-              
+                
                 // MARK: - Question + Spacer
                 VStack() {
                     Text(viewModel.question.question)
@@ -49,39 +47,16 @@ struct QuestionView: View {
                     // MARK: - Answers
                     VStack(spacing: 16) {
                         ForEach(viewModel.question.answers.indices, id: \.self) { index in
-                            Button(action: {
-                                viewModel.selectAnswer(index)
-                            }) {
-                                HStack(spacing: 8) {
-                                    Text("\(String(UnicodeScalar(65 + index)!)).")
-                                        .foregroundColor(Color(hex: "E19B30"))
-                                        .font(.system(size: 18, weight: .semibold))
-                                    
-                                    Text(viewModel.question.answers[index])
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 18, weight: .semibold))
-                                    
-                                    Spacer()
-                                }
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(viewModel.isAnswerChecked && index == viewModel.question.correctIndex
-                                              ? Color.green
-                                              : Color.clear
-                                             )
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .stroke(Color.white, lineWidth: 3)
-                                        )
-                                )
-                            }
-                            .padding(.horizontal)
+                            AnswerButtonView(
+                                index: index,
+                                title: viewModel.question.answers[index],
+                                isSelected: viewModel.selectedAnswer == index,
+                                isDisabled: viewModel.areAnswersDisabled,
+                                onTap: { viewModel.selectAnswer(index) }
+                            )
                         }
                     }
                     
-                    Spacer()
                     
                     // MARK: - Hints
                     HintsBarView(
@@ -91,7 +66,7 @@ struct QuestionView: View {
                         onHeart: { viewModel.useExtraLife() }
                     )
                 }
-                .padding(.bottom, 60)
+                .padding(.bottom)
                 
             }
             .padding(.bottom)
@@ -103,12 +78,12 @@ struct QuestionView: View {
                     Button(
                         action: {
                             dismiss()
-                    }) {
-                        Image(systemName: "arrow.backward")
-                            .foregroundColor(.white)
-                    }
+                        }) {
+                            Image(systemName: "arrow.backward")
+                                .foregroundColor(.white)
+                        }
                 }
-
+                
                 ToolbarItem(placement: .principal) {
                     VStack(spacing: 2) {
                         Text("QUESTION #1")
@@ -119,7 +94,7 @@ struct QuestionView: View {
                             .foregroundColor(.white)
                     }
                 }
-
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         showLevels = true
@@ -139,20 +114,55 @@ struct QuestionView: View {
 }
 
 
-// MARK: - Color+Hex
+// MARK: - AnswerButtonView
+struct AnswerButtonView: View {
+    let index: Int
+    let title: String
+    let isSelected: Bool
+    let isDisabled: Bool
+    let onTap: () -> Void
+    
+    var body: some View {
+        let style: ColorGradientButton = isSelected ? .yellow : .darkBlue
+        
+        MainButton(style: style, action: onTap) {
+            HStack(spacing: 8) {
+                Text("\(String(UnicodeScalar(65 + index)!)).")
+                    .foregroundColor(Color(hex: "E19B30"))
+                    .font(.system(size: 18, weight: .semibold))
+                
+                Text(title)
+                    .foregroundColor(.white)
+                    .font(.system(size: 18, weight: .semibold))
+                
+                Spacer()
+            }
+            .frame(height: 36)
+            .padding(.top, 16)
+            .padding(.bottom, 19)
+            .padding(.leading, 34)
+            .padding(.trailing, 24)
+        }
+        .animation(.easeInOut(duration: 0.3), value: isSelected)
+        .disabled(isDisabled)
+        .padding(.horizontal)
+    }
+}
 
+
+// MARK: - Color+Hex
 extension Color {
     init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-
+        
         var rgb: UInt64 = 0
         Scanner(string: hexSanitized).scanHexInt64(&rgb)
-
+        
         let r = Double((rgb >> 16) & 0xFF) / 255
         let g = Double((rgb >> 8) & 0xFF) / 255
         let b = Double(rgb & 0xFF) / 255
-
+        
         self.init(red: r, green: g, blue: b)
     }
 }
