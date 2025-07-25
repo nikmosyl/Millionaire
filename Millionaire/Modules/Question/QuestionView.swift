@@ -157,25 +157,24 @@ struct AnswerButtonView: View {
 
 // MARK: - Timer Background Helper
 private func timerStyle(for seconds: Int) -> (background: Color, font: Color) {
-    switch seconds {
+    return switch seconds {
     case 0...3:
-        return (
+        (
             background: Color(hex: "#832203").opacity(0.3),
             font: Color(hex: "#FF6231")
         )
     case 4...12:
-        return (
+         (
             background: Color(hex: "FFA800").opacity(0.5),
             font: Color(hex: "#FFB340")
         )
     default: // 13...30
-        return (
+         (
             background: Color.white.opacity(0.1),
             font: Color.white
         )
     }
 }
-
 
 // MARK: - Color+Hex
 extension Color {
@@ -193,7 +192,6 @@ extension Color {
         self.init(red: r, green: g, blue: b)
     }
 }
-
 
 #Preview {
     QuestionView()
