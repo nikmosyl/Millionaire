@@ -8,5 +8,4 @@
 struct GameState {
     var bestScore: Int
     var continueGame: Bool
-    var newGame: Bool
 }

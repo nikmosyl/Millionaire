@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var navigateToQuestion = false
+    @State private var showRules = false
 
     var body: some View {
         NavigationStack{
@@ -47,44 +48,41 @@ struct HomeView: View {
                 Spacer()
                 
                 if viewModel.gameState.continueGame {
-                    Button {
-                        viewModel.continGame()
+                    MainButton(style: .yellow) {
+                        viewModel.continueGame()
                         navigateToQuestion = false
-                    } label: {
+                    } content: {
                         Text("Continue Game")
-                            .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.yellow)
-                            .cornerRadius(12)
-                            .foregroundStyle(.black)
-                            .fontWeight(.bold)
+                            .frame(width: 311, height: 62)
+                            .foregroundStyle(.white)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 24))
+                            
                     }
                     .padding(.horizontal)
                     
-                    Button {
+                    MainButton(style: .darkBlue) {
                         viewModel.startNewGame()
                         navigateToQuestion = true
-                    } label: {
+                    } content: {
                         Text("New Game")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.green)
-                            .cornerRadius(12)
+                            .frame(width: 311, height: 62)
                             .foregroundStyle(.white)
-                            .fontWeight(.bold)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 24))
                     }
                     .padding(.horizontal)
                 } else {
-                    Button {
+                    MainButton(style: .darkBlue) {
                         viewModel.startNewGame()
-                    } label: {
+                        navigateToQuestion = true
+                    } content: {
                         Text("New Game")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(.green)
-                            .cornerRadius(12)
+                            .frame(width: 311, height: 62)
                             .foregroundStyle(.white)
-                            .fontWeight(.bold)
+                            .fontWeight(.semibold)
+                            .font(.system(size: 24))
                     }
                     .padding(.horizontal)
                 }
@@ -95,20 +93,22 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        print("Rules tapped")
-                    } label: {
-                        Image(systemName: "questionmark.circle")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding()
-                            .foregroundStyle(.white)
-                    }
+                Button {
+                    showRules = true
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .padding()
+                        .foregroundStyle(.white)
                 }
             }
             .navigationDestination(isPresented: $navigateToQuestion) {
                 QuestionView()
+            }
+            .sheet(isPresented: $showRules) {
+                RulesView()
+                    .presentationDetents([.large])
             }
         }
     }

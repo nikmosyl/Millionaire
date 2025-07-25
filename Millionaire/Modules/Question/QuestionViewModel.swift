@@ -1,6 +1,6 @@
 //
 //  QuestionViewModel.swift
-//  
+//
 //
 //  Created by Nadia on 22/07/2025.
 //
@@ -12,9 +12,11 @@ import SwiftUI
 final class QuestionViewModel: ObservableObject {
     @Published var question: QuestionModel
     @Published var timeRemaining = 30
-    @Published var selectedAnswer: Int? = nil
+    @Published var selectedAnswer: Int?
+    @Published var isAnswerCorrect: Bool?
     @Published var isAnswerChecked = false
-
+    @Published var areAnswersDisabled = false
+    
     private var timer: AnyCancellable?
     
     init() {
@@ -32,12 +34,30 @@ final class QuestionViewModel: ObservableObject {
         )
         
         startTimer()
-
+        
     }
     
     func selectAnswer(_ index: Int) {
+        guard !areAnswersDisabled else { return }
+        
         selectedAnswer = index
+        areAnswersDisabled = true
         isAnswerChecked = true
+        
+        // Checking answer
+        isAnswerCorrect = (index == question.correctIndex)
+        
+        // Reset answer
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) {
+            self.resetAnswerState()
+        }
+    }
+    
+    private func resetAnswerState() {
+        selectedAnswer = nil
+        isAnswerChecked = false
+        isAnswerCorrect = nil
+        areAnswersDisabled = false
     }
     
     // MARK: - Hints
@@ -45,17 +65,17 @@ final class QuestionViewModel: ObservableObject {
         print("👉 50:50 hint used")
         // TODO: implement logic
     }
-
+    
     func askAudience() {
         print("🧑‍🤝‍🧑 Audience hint used")
         // TODO: implement logic
     }
-
+    
     func callFriend() {
         print("📞 Phone a friend used")
         // TODO: implement logic
     }
-
+    
     func useExtraLife() {
         print("❤️ Extra life used")
         // TODO: implement logic
@@ -69,7 +89,7 @@ final class QuestionViewModel: ObservableObject {
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self = self else { return }
-
+                
                 if self.timeRemaining > 0 {
                     self.timeRemaining -= 1
                 } else {
@@ -78,12 +98,12 @@ final class QuestionViewModel: ObservableObject {
                 }
             }
     }
-
+    
     private func onTimeOut() {
         print("⏱ The End View")
         // coming soon
     }
-
+    
 }
 
 

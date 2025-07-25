@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct QuestionModel: Identifiable {
     let id = UUID()
     let question: String
