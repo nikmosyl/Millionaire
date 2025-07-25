@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var navigateToQuestion = false
+    @State private var showRules = false
 
     var body: some View {
         NavigationStack{
@@ -95,20 +96,22 @@ struct HomeView: View {
                     .ignoresSafeArea()
             )
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        print("Rules tapped")
-                    } label: {
-                        Image(systemName: "questionmark.circle")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .padding()
-                            .foregroundStyle(.white)
-                    }
+                Button {
+                    showRules = true
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .padding()
+                        .foregroundStyle(.white)
                 }
             }
             .navigationDestination(isPresented: $navigateToQuestion) {
                 QuestionView()
+            }
+            .sheet(isPresented: $showRules) {
+                RulesView()
+                    .presentationDetents([.large])
             }
         }
     }
