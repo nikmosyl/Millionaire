@@ -16,19 +16,25 @@ struct QuestionView: View {
         NavigationStack {
             VStack(spacing: 24) {
                 // MARK: - Timer
-                Label {
-                    Text("\(viewModel.timeRemaining)")
-                        .font(.system(size: 24, weight: .semibold))
-                        .multilineTextAlignment(.center)
-                } icon: {
-                    Image(systemName: "timer")
-                        .font(.system(size: 24, weight: .semibold))
+                let timer = timerStyle(for: viewModel.timeRemaining)
+
+                ZStack {
+                    Capsule()
+                        .fill(timer.background)
+                        .frame(width: 91, height: 45)
+
+                    HStack(spacing: 8) {
+                        Image(systemName: "timer")
+                            .font(.system(size: 24, weight: .semibold))
+
+                        Text("\(viewModel.timeRemaining)")
+                            .font(.system(size: 24, weight: .semibold))
+                    }
+                    .foregroundColor(timer.font)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 16)
                 }
-                .foregroundColor(.white)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 16)
-                .background(Color.blue.opacity(0.2))
-                .clipShape(Capsule())
+               
                 
                 // MARK: - Question + Spacer
                 VStack() {
@@ -67,7 +73,6 @@ struct QuestionView: View {
                     )
                 }
                 .padding(.bottom)
-                
             }
             .padding(.bottom)
             .background(
@@ -146,6 +151,28 @@ struct AnswerButtonView: View {
         .animation(.easeInOut(duration: 0.3), value: isSelected)
         .disabled(isDisabled)
         .padding(.horizontal)
+    }
+}
+
+
+// MARK: - Timer Background Helper
+private func timerStyle(for seconds: Int) -> (background: Color, font: Color) {
+    switch seconds {
+    case 0...3:
+        return (
+            background: Color(hex: "#832203").opacity(0.3),
+            font: Color(hex: "#FF6231")
+        )
+    case 4...12:
+        return (
+            background: Color(hex: "FFA800").opacity(0.5),
+            font: Color(hex: "#FFB340")
+        )
+    default: // 13...30
+        return (
+            background: Color.white.opacity(0.1),
+            font: Color.white
+        )
     }
 }
 
