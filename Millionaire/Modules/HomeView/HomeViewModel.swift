@@ -11,19 +11,20 @@ class HomeViewModel: ObservableObject {
     @Published var gameState: GameState
     
     init() {
-        self.gameState = GameState(bestScore: 15000, continueGame: true, newGame: false)
+        self.gameState = GameState(bestScore: 15000, continueGame: false)
     }
     
     func startNewGame() {
-        gameState = GameState(
-                bestScore: gameState.bestScore,
-                continueGame: true,
-                newGame: true
-            )
-        print("New game started")
+        #warning("DEBUG:")
+        print("Нажата кнопка новой игры")
+        
+        #warning("TO DO: реализовать функционал начала новой игры")
     }
     
-    func continGame() {
-        print("Continuing existing game")
+    func continueGame() {
+        #warning("DEBUG:")
+        print("Нажата кнопка продолжения игры")
+
+        #warning("TO DO: реализовать функционал начала новой игры")
     }
 }
