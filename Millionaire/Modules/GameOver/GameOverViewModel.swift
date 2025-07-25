@@ -13,15 +13,7 @@ class GameOverViewModel: ObservableObject{
     init() {
         self.result = GameResult(level: 1, score: 10000)
     }
-    
-    var levelText: String {
-        "Level \(result.level)"
-    }
-    
-    var scoreText: String {
-        "$\(result.score)"
-    }
-    
+   
     func startNewGame() {
         print("Start new game")
     }
