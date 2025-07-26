@@ -11,6 +11,7 @@ final class GameService {
     static let shared = GameService()
     
     private let storage = StorageManager.shared
+    
     private lazy var currentDifficulty: DifficultyLevel = {
         switch gameState.currentLevel {
         case 0...5:
@@ -23,7 +24,10 @@ final class GameService {
     }()
     
     private(set) var currentQuestion: Question?
-    private(set) var gameState: GameState
+    
+    var gameState: GameState
+    
+    var saveLevel: Int = 0
     
     private init() {
         currentQuestion = storage.loadQuestion()
@@ -42,7 +46,12 @@ final class GameService {
     
     func winRaund() {
         if gameState.currentLevel < LevelList.maxLevel {
+            if LevelList.saves.contains(gameState.currentLevel) {
+                saveLevel = gameState.currentLevel
+            }
+            
             gameState.currentLevel += 1
+            gameState.timeRemaining = 30
         }
         else {
             print("YOU ARE MILLIONERE")
@@ -50,12 +59,13 @@ final class GameService {
     }
     
     func loseRaund() {
-        
-        
-        endGame()
+        gameState.timeRemaining = 30
+        _ = endGame()
     }
     
-    func endGame() {
+    
+    func endGame() -> Int {
         gameState.currentLevel = 0
+        return saveLevel
     }
 }

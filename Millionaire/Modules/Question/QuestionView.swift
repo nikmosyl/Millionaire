@@ -111,10 +111,13 @@ struct QuestionView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showLevels) {
-                LevelListView(selectedButton: viewModel.service.gameState.currentLevel)
+                LevelListView(selectedButton: viewModel.service.gameState.currentLevel - 1)
             }
             .navigationBarBackButtonHidden(true)
             .foregroundColor(.white)
+            .onAppear {
+                viewModel.startTimer()
+            }
         }
     }
 }

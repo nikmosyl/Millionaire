@@ -18,7 +18,7 @@ enum AnswerState {
 
 final class QuestionViewModel: ObservableObject {
     @Published var question: Question
-    @Published var timeRemaining = 30
+    
     @Published var selectedAnswer: Int?
     @Published var isAnswerCorrect: Bool?
     @Published var isAnswerChecked = false
@@ -28,12 +28,16 @@ final class QuestionViewModel: ObservableObject {
     @Published var answers: [String] = []
     @Published var answerStates: [AnswerState] = []
     
+    @Published var timeRemaining = GameService.shared.gameState.timeRemaining
+    private var isPaused = false
+    
     let service = GameService.shared
     
     private var timer: AnyCancellable?
     
     init() {
         if let currentQuestion = service.currentQuestion {
+            print("currentQuestion", currentQuestion)
             question = currentQuestion
             shuffleAnswers()
         } else {
@@ -51,7 +55,7 @@ final class QuestionViewModel: ObservableObject {
             }
         }
         
-        startTimer()
+//        startTimer()
     }
     
     func shuffleAnswers() {
@@ -64,6 +68,8 @@ final class QuestionViewModel: ObservableObject {
         areAnswersDisabled = true
         selectedAnswer = index
         answerStates[index] = .selected
+        
+        pauseTimer()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.checkAnswer()
@@ -122,7 +128,7 @@ final class QuestionViewModel: ObservableObject {
     
     // MARK: - Timer
     
-    private func startTimer() {
+    func startTimer() {
         timer = Timer
             .publish(every: 1, on: .main, in: .common)
             .autoconnect()
@@ -131,6 +137,7 @@ final class QuestionViewModel: ObservableObject {
                 
                 if self.timeRemaining > 0 {
                     self.timeRemaining -= 1
+                    self.service.gameState.timeRemaining = self.timeRemaining
                 } else {
                     self.timer?.cancel()
                     self.onTimeOut()
@@ -138,11 +145,14 @@ final class QuestionViewModel: ObservableObject {
             }
     }
     
-    private func onTimeOut() {
-        print("⏱ The End View")
-        // coming soon
+    func pauseTimer() {
+        timer?.cancel()
+        timer = nil
     }
     
+    private func onTimeOut() {
+        service.loseRaund()
+    }
 }
 
 
