@@ -14,7 +14,7 @@ struct LevelListView: View {
     let selectedButton: Int
     
     var body: some View {
-        NavigationStack {
+        //NavigationStack {
             VStack(spacing: 0) {
                 Image(.logo)
                     .resizable()
@@ -66,7 +66,7 @@ struct LevelListView: View {
                     }
                 }
             }
-        }
+        //}
     }
 }
 

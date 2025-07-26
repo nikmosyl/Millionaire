@@ -12,7 +12,7 @@ struct QuestionView: View {
     @StateObject private var viewModel = QuestionViewModel()
     
     var body: some View {
-        NavigationStack {
+        //NavigationStack {
             VStack(spacing: 24) {
                 // MARK: - Timer
                 let timer = timerStyle(for: viewModel.timeRemaining)
@@ -118,7 +118,7 @@ struct QuestionView: View {
             .onAppear {
                 viewModel.startTimer()
             }
-        }
+        //}
     }
 }
 
