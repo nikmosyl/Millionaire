@@ -10,23 +10,22 @@ import SwiftUI
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = QuestionViewModel()
-    @State private var showLevels = false
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
                 // MARK: - Timer
                 let timer = timerStyle(for: viewModel.timeRemaining)
-
+                
                 ZStack {
                     Capsule()
                         .fill(timer.background)
                         .frame(width: 91, height: 45)
-
+                    
                     HStack(spacing: 8) {
                         Image(systemName: "timer")
                             .font(.system(size: 24, weight: .semibold))
-
+                        
                         Text("\(viewModel.timeRemaining)")
                             .font(.system(size: 24, weight: .semibold))
                     }
@@ -34,11 +33,10 @@ struct QuestionView: View {
                     .padding(.vertical, 8)
                     .padding(.horizontal, 16)
                 }
-               
                 
                 // MARK: - Question + Spacer
                 VStack() {
-                    Text(viewModel.question.question)
+                    Text(viewModel.question.title)
                         .font(.system(size: 24))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 32)
@@ -52,17 +50,18 @@ struct QuestionView: View {
                     
                     // MARK: - Answers
                     VStack(spacing: 16) {
-                        ForEach(viewModel.question.answers.indices, id: \.self) { index in
-                            AnswerButtonView(
-                                index: index,
-                                title: viewModel.question.answers[index],
-                                isSelected: viewModel.selectedAnswer == index,
-                                isDisabled: viewModel.areAnswersDisabled,
-                                onTap: { viewModel.selectAnswer(index) }
-                            )
+                        if viewModel.answerStates.count == viewModel.answers.count {
+                            ForEach(viewModel.answers.indices, id: \.self) { index in
+                                AnswerButtonView(
+                                    index: index,
+                                    title: viewModel.answers[index],
+                                    isDisabled: viewModel.areAnswersDisabled,
+                                    state: viewModel.answerStates[index],
+                                    onTap: { viewModel.selectAnswer(index) }
+                                )
+                            }
                         }
                     }
-                    
                     
                     // MARK: - Hints
                     HintsBarView(
@@ -76,7 +75,8 @@ struct QuestionView: View {
             }
             .padding(.bottom)
             .background(
-                Color(red: 0.07, green: 0.11, blue: 0.25).ignoresSafeArea()
+                LinearGradient(colors: [Color.blue.opacity(0.9), Color.black], startPoint: .top, endPoint: .bottom)
+                    .ignoresSafeArea()
             )
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -91,10 +91,12 @@ struct QuestionView: View {
                 
                 ToolbarItem(placement: .principal) {
                     VStack(spacing: 2) {
-                        Text("QUESTION #1")
+                        Text("QUESTION #\(viewModel.service.gameState.currentLevel)")
                             .font(.headline)
                             .foregroundColor(.white.opacity(0.5))
-                        Text("$500")
+                        
+                        #warning("Потенциальный краш")
+                        Text(LevelListModel.buttons[viewModel.service.gameState.currentLevel - 1].dollar)
                             .font(.headline)
                             .foregroundColor(.white)
                     }
@@ -102,15 +104,15 @@ struct QuestionView: View {
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        showLevels = true
+                        viewModel.showLevels = true
                     }) {
                         Image(systemName: "line.3.horizontal")
                             .foregroundColor(.white)
                     }
                 }
             }
-            .navigationDestination(isPresented: $showLevels) {
-                LevelListView(selectedButton: 0)
+            .navigationDestination(isPresented: $viewModel.showLevels) {
+                LevelListView(selectedButton: viewModel.service.gameState.currentLevel)
             }
             .navigationBarBackButtonHidden(true)
             .foregroundColor(.white)
@@ -118,17 +120,27 @@ struct QuestionView: View {
     }
 }
 
-
 // MARK: - AnswerButtonView
 struct AnswerButtonView: View {
     let index: Int
     let title: String
-    let isSelected: Bool
     let isDisabled: Bool
+    let state: AnswerState
     let onTap: () -> Void
     
     var body: some View {
-        let style: ColorGradientButton = isSelected ? .yellow : .darkBlue
+        let style: ColorGradientButton = {
+            switch state {
+            case .normal:
+                return .darkBlue
+            case .selected:
+                return .yellow
+            case .correct:
+                return .green
+            case .wrong:
+                return .red
+            }
+        }()
         
         MainButton(style: style, action: onTap) {
             HStack(spacing: 8) {
@@ -148,12 +160,11 @@ struct AnswerButtonView: View {
             .padding(.leading, 34)
             .padding(.trailing, 24)
         }
-        .animation(.easeInOut(duration: 0.3), value: isSelected)
+        //.animation(.easeInOut(duration: 0.3), value: isSelected)
         .disabled(isDisabled)
         .padding(.horizontal)
     }
 }
-
 
 // MARK: - Timer Background Helper
 private func timerStyle(for seconds: Int) -> (background: Color, font: Color) {
@@ -164,12 +175,12 @@ private func timerStyle(for seconds: Int) -> (background: Color, font: Color) {
             font: Color(hex: "#FF6231")
         )
     case 4...12:
-         (
+        (
             background: Color(hex: "FFA800").opacity(0.5),
             font: Color(hex: "#FFB340")
         )
     default: // 13...30
-         (
+        (
             background: Color.white.opacity(0.1),
             font: Color.white
         )

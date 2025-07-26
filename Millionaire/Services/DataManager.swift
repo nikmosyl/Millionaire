@@ -7,12 +7,6 @@
 
 import Foundation
 
-enum DifficultyLevel: String {
-    case easy
-    case medium
-    case hard
-}
-
 final class DataManager {
     static let shared = DataManager()
     
@@ -32,7 +26,7 @@ final class DataManager {
         }
     }
     
-    func getQuestion(difficulty: DifficultyLevel, completion: @escaping (Question?) -> Void) {
+    func getQuestion(difficulty: DifficultyLevel, completion: @escaping (Question) -> Void) {
         func fetchApi() {
             getApiData(difficulty: difficulty) { apiResponse in
                 if apiResponse.responseCode == 0, let question = apiResponse.results.first {

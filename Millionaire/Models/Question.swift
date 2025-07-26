@@ -15,7 +15,7 @@ struct ApiResponseEvent: Decodable {
     }
 }
 
-struct Question: Decodable {
+struct Question: Codable {
     let difficulty: String
     let title: String
     let correctAnswer: String

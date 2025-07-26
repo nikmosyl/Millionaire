@@ -9,47 +9,84 @@ import Combine
 import Foundation
 import SwiftUI
 
+enum AnswerState {
+    case normal
+    case selected
+    case correct
+    case wrong
+}
+
 final class QuestionViewModel: ObservableObject {
-    @Published var question: QuestionModel
+    @Published var question: Question
     @Published var timeRemaining = 30
     @Published var selectedAnswer: Int?
     @Published var isAnswerCorrect: Bool?
     @Published var isAnswerChecked = false
     @Published var areAnswersDisabled = false
+    @Published var showLevels = false
+    
+    @Published var answers: [String] = []
+    @Published var answerStates: [AnswerState] = []
+    
+    let service = GameService.shared
     
     private var timer: AnyCancellable?
     
     init() {
-        self.question = QuestionModel(
-            question: """
-            What year was the year, when first deodorant was invented in our life?
-            """,
-            answers: [
-                "First answer option",
-                "Second answer option",
-                "Third answer option",
-                "Fourth answer option"
-            ],
-            correctIndex: 2
-        )
+        if let currentQuestion = service.currentQuestion {
+            question = currentQuestion
+            shuffleAnswers()
+        } else {
+            question = Question(
+                difficulty: "",
+                title: "A question will appear here soon",
+                correctAnswer: "",
+                incorrectAnswers: []
+            )
+            service.getQuestion { [weak self] question in
+                DispatchQueue.main.async {
+                    self?.question = question
+                    self?.shuffleAnswers()
+                }
+            }
+        }
         
         startTimer()
-        
+    }
+    
+    func shuffleAnswers() {
+        answers = ([question.correctAnswer] + question.incorrectAnswers).shuffled()
+        answerStates = Array(repeating: .normal, count: answers.count)
     }
     
     func selectAnswer(_ index: Int) {
         guard !areAnswersDisabled else { return }
-        
-        selectedAnswer = index
         areAnswersDisabled = true
-        isAnswerChecked = true
+        selectedAnswer = index
+        answerStates[index] = .selected
         
-        // Checking answer
-        isAnswerCorrect = (index == question.correctIndex)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.checkAnswer()
+        }
+    }
+    
+    private func checkAnswer() {
+        guard let selected = selectedAnswer else { return }
         
-        // Reset answer
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.5) {
-            self.resetAnswerState()
+        let correctIndex = answers.firstIndex(of: question.correctAnswer)
+        
+        if selected == correctIndex {
+            answerStates[selected] = .correct
+            
+        } else {
+            answerStates[selected] = .wrong
+            if let correct = correctIndex {
+                answerStates[correct] = .correct
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.showLevels = true
         }
     }
     
