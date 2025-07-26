@@ -24,7 +24,10 @@ struct LevelListView: View {
                     .offset(y: 15)
                     .shadow(color: Color.black.opacity(0.5), radius: 44, x: 0, y: 0)
                 ForEach(Array(buttons.enumerated().reversed()), id: \.1.id) { index, button in
-                    MainButton(style: index + 1 == selectedButton ? ColorGradientButton.green : button.color, action: { }) {
+                    MainButton(
+                        style: index + 1 == selectedButton ? ColorGradientButton.green : button.color,
+                        action: {
+                        }) {
                         HStack {
                             Text(button.number)
                             Spacer()
@@ -68,5 +71,5 @@ struct LevelListView: View {
 }
 
 #Preview {
-    LevelListView(selectedButton: 7)
+    LevelListView(selectedButton: 1)
 }

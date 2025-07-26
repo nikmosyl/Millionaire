@@ -77,12 +77,14 @@ final class QuestionViewModel: ObservableObject {
         
         if selected == correctIndex {
             answerStates[selected] = .correct
-            
+            service.winRaund()
         } else {
             answerStates[selected] = .wrong
             if let correct = correctIndex {
                 answerStates[correct] = .correct
             }
+            
+            service.loseRaund()
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

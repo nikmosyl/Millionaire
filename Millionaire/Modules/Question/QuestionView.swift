@@ -95,8 +95,7 @@ struct QuestionView: View {
                             .font(.headline)
                             .foregroundColor(.white.opacity(0.5))
                         
-                        #warning("Потенциальный краш")
-                        Text(LevelListModel.buttons[viewModel.service.gameState.currentLevel - 1].dollar)
+                        Text(LevelList.levels[viewModel.service.gameState.currentLevel] ?? "-")
                             .font(.headline)
                             .foregroundColor(.white)
                     }

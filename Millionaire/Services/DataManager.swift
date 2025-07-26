@@ -30,6 +30,7 @@ final class DataManager {
         func fetchApi() {
             getApiData(difficulty: difficulty) { apiResponse in
                 if apiResponse.responseCode == 0, let question = apiResponse.results.first {
+                    print("answer:", question.correctAnswer)
                     completion(question)
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {

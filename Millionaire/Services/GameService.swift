@@ -11,27 +11,7 @@ final class GameService {
     static let shared = GameService()
     
     private let storage = StorageManager.shared
-    private var currentDifficulty: DifficultyLevel
-    
-    private(set) var currentQuestion: Question?
-    private(set) var gameState: GameState
-    
-    private init() {
-        currentQuestion = storage.loadQuestion()
-        gameState = storage.loadGameState()
-        currentDifficulty = switch gameState.currentLevel {
-        case 0...5:
-                .easy
-        case 6...10:
-                .medium
-        default:
-                .hard
-        }
-        
-        print("currLeve:", gameState.currentLevel)
-    }
-    
-    func getCurrentDifficulty() -> DifficultyLevel {
+    private lazy var currentDifficulty: DifficultyLevel = {
         switch gameState.currentLevel {
         case 0...5:
                 .easy
@@ -40,6 +20,14 @@ final class GameService {
         default:
                 .hard
         }
+    }()
+    
+    private(set) var currentQuestion: Question?
+    private(set) var gameState: GameState
+    
+    private init() {
+        currentQuestion = storage.loadQuestion()
+        gameState = storage.loadGameState()
     }
     
     func getQuestion(completion: @escaping (Question) -> Void) {
@@ -50,5 +38,24 @@ final class GameService {
     
     func newGame() {
         gameState.currentLevel = 1
+    }
+    
+    func winRaund() {
+        if gameState.currentLevel < LevelList.maxLevel {
+            gameState.currentLevel += 1
+        }
+        else {
+            print("YOU ARE MILLIONERE")
+        }
+    }
+    
+    func loseRaund() {
+        
+        
+        endGame()
+    }
+    
+    func endGame() {
+        gameState.currentLevel = 0
     }
 }
