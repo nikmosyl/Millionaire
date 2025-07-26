@@ -21,6 +21,7 @@ struct HintsBarView: View {
     var onPhone: () -> Void = {}
     var onHeart: () -> Void = {}
     
+    var usedHints: Set<HintType> = []
     var onHintTapped: (HintType) -> Void = { _ in }
     
     var body: some View {
@@ -48,7 +49,7 @@ struct HintsBarView: View {
                 
                 HStack(spacing: spacing) {
                     ForEach(HintType.allCases, id: \.self) { hint in
-                        HintButton(action: {
+                        HintButton(isUsed: usedHints.contains(hint), action: {
                            switch hint {
                            case .fiftyFifty: onFiftyFifty()
                            case .audience:   onAudience()
@@ -80,14 +81,17 @@ struct HintsBarView: View {
 
 
 struct HintButton<Content: View>: View {
+    let isUsed: Bool
     let action: () -> Void
     let content: Content
     @State private var isPressed = false
 
     init(
+        isUsed: Bool = false,
         action: @escaping () -> Void,
         @ViewBuilder content: () -> Content
     ) {
+        self.isUsed = isUsed
         self.action = action
         self.content = content()
     }
@@ -124,6 +128,7 @@ struct HintButton<Content: View>: View {
                 .onEnded { _ in isPressed = false }
         )
         .buttonStyle(.plain)
+        .disabled(isUsed)
     }
 }
 

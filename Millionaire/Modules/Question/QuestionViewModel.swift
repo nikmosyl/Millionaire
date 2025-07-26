@@ -28,6 +28,10 @@ final class QuestionViewModel: ObservableObject {
     @Published var answers: [String] = []
     @Published var answerStates: [AnswerState] = []
     
+    @Published var hiddenAnswerIndices: Set<Int> = []
+    @Published var isFiftyUsed = false
+    @Published var usedHints: Set<HintType> = []
+    
     let service = GameService.shared
     
     private var timer: AnyCancellable?
@@ -99,8 +103,15 @@ final class QuestionViewModel: ObservableObject {
     
     // MARK: - Hints
     func useFiftyFifty() {
+        guard !usedHints.contains(.fiftyFifty) else { return }
+        usedHints.insert(.fiftyFifty)
         print("👉 50:50 hint used")
-        // TODO: implement logic
+
+        let incorrectIndices = answers.indices.filter {
+            answers[$0] != question.correctAnswer
+        }
+        
+        hiddenAnswerIndices = Set(incorrectIndices.shuffled().prefix(2))
     }
     
     func askAudience() {

@@ -54,7 +54,7 @@ struct QuestionView: View {
                             ForEach(viewModel.answers.indices, id: \.self) { index in
                                 AnswerButtonView(
                                     index: index,
-                                    title: viewModel.answers[index],
+                                    title: viewModel.hiddenAnswerIndices.contains(index) ? "" : viewModel.answers[index],
                                     isDisabled: viewModel.areAnswersDisabled,
                                     state: viewModel.answerStates[index],
                                     onTap: { viewModel.selectAnswer(index) }
@@ -68,7 +68,8 @@ struct QuestionView: View {
                         onFiftyFifty: { viewModel.useFiftyFifty() },
                         onAudience: { viewModel.askAudience() },
                         onPhone: { viewModel.callFriend() },
-                        onHeart: { viewModel.useExtraLife() }
+                        onHeart: { viewModel.useExtraLife() },
+                        usedHints: viewModel.usedHints
                     )
                 }
                 .padding(.bottom)
@@ -95,10 +96,16 @@ struct QuestionView: View {
                             .font(.headline)
                             .foregroundColor(.white.opacity(0.5))
                         
-                        #warning("Потенциальный краш")
-                        Text(LevelListModel.buttons[viewModel.service.gameState.currentLevel - 1].dollar)
-                            .font(.headline)
-                            .foregroundColor(.white)
+                        if viewModel.service.gameState.currentLevel > 0,
+                           viewModel.service.gameState.currentLevel <= LevelListModel.buttons.count {
+                            Text(LevelListModel.buttons[viewModel.service.gameState.currentLevel - 1].dollar)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                        } else {
+                            Text("$ ???")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                        }
                     }
                 }
                 

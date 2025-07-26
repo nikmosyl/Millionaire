@@ -7,9 +7,9 @@
 
 import Foundation
 
-//struct QuestionModel: Identifiable {
-//    let id = UUID()
-//    let question: String
-//    let answers: [String] 
-//    let correctIndex: Int
-//}
+struct QuestionModel: Identifiable {
+    let id = UUID()
+    let question: String
+    let answers: [String] 
+    let correctIndex: Int
+}
