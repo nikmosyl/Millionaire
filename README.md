@@ -1,7 +1,3 @@
-readme_text = """
-<p align="center">
-  <img src="Assets/logo.png" alt="Millionaire Logo" width="600"/>
-</p>
 
 # Challenge: Millionaire Quiz Game ![version](https://img.shields.io/badge/v1.0-release-green)
 
