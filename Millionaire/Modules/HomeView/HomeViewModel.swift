@@ -8,23 +8,18 @@
 import Foundation
 
 class HomeViewModel: ObservableObject {
-    @Published var gameState: GameState
+    @Published var gameState: GameState = GameService.shared.gameState
     
-    init() {
-        self.gameState = GameState(bestScore: 15000, continueGame: false)
+    func onAppear() {
+        gameState = GameService.shared.gameState
     }
     
     func startNewGame() {
-        #warning("DEBUG:")
-        print("Нажата кнопка новой игры")
-        
-        #warning("TO DO: реализовать функционал начала новой игры")
+        GameService.shared.newGame()
+        gameState = GameService.shared.gameState
     }
     
     func continueGame() {
-        #warning("DEBUG:")
-        print("Нажата кнопка продолжения игры")
-
-        #warning("TO DO: реализовать функционал начала новой игры")
+        gameState = GameService.shared.gameState
     }
 }

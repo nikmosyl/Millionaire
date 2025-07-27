@@ -8,10 +8,10 @@
 import Foundation
 
 class GameOverViewModel: ObservableObject{
-    @Published var result: GameResult
+    @Published var result: (level: Int, score: Int)
     
     init() {
-        self.result = GameResult(level: 1, score: 10000)
+        self.result = (level: 1, score: 10000)
     }
    
     func startNewGame() {

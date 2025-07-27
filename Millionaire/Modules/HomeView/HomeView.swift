@@ -11,7 +11,7 @@ struct HomeView: View {
     @StateObject private var viewModel = HomeViewModel()
     @State private var navigateToQuestion = false
     @State private var showRules = false
-
+    
     var body: some View {
         NavigationStack{
             VStack(spacing: 16) {
@@ -28,7 +28,7 @@ struct HomeView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
                 
-                if viewModel.gameState.bestScore > 0 {
+                if !viewModel.gameState.bestScore.isEmpty {
                     VStack(spacing: 4) {
                         Text("All-time Best Score")
                             .foregroundStyle(.white.opacity(0.5))
@@ -37,7 +37,7 @@ struct HomeView: View {
                         HStack(spacing: 6) {
                             Image("dollar")
                             
-                            Text("$\(viewModel.gameState.bestScore)")
+                            Text("\(viewModel.gameState.bestScore)")
                                 .foregroundStyle(.white)
                                 .font(.title)
                                 .fontWeight(.semibold)
@@ -47,10 +47,10 @@ struct HomeView: View {
                 
                 Spacer()
                 
-                if viewModel.gameState.continueGame {
+                if viewModel.gameState.currentLevel > 0 {
                     MainButton(style: .yellow) {
                         viewModel.continueGame()
-                        navigateToQuestion = false
+                        navigateToQuestion = true
                     } content: {
                         Text("Continue Game")
                             .padding()
@@ -58,34 +58,25 @@ struct HomeView: View {
                             .foregroundStyle(.white)
                             .fontWeight(.semibold)
                             .font(.system(size: 24))
-                            
-                    }
-                    .padding(.horizontal)
-                    
-                    MainButton(style: .darkBlue) {
-                        viewModel.startNewGame()
-                        navigateToQuestion = true
-                    } content: {
-                        Text("New Game")
-                            .frame(width: 311, height: 62)
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                            .font(.system(size: 24))
-                    }
-                    .padding(.horizontal)
-                } else {
-                    MainButton(style: .darkBlue) {
-                        viewModel.startNewGame()
-                        navigateToQuestion = true
-                    } content: {
-                        Text("New Game")
-                            .frame(width: 311, height: 62)
-                            .foregroundStyle(.white)
-                            .fontWeight(.semibold)
-                            .font(.system(size: 24))
+                        
                     }
                     .padding(.horizontal)
                 }
+                MainButton(
+                    style: viewModel.gameState.currentLevel > 0
+                    ? .darkBlue
+                    : .yellow
+                ) {
+                    viewModel.startNewGame()
+                    navigateToQuestion = true
+                } content: {
+                    Text("New Game")
+                        .frame(width: 311, height: 62)
+                        .foregroundStyle(.white)
+                        .fontWeight(.semibold)
+                        .font(.system(size: 24))
+                }
+                .padding(.horizontal)
                 Spacer(minLength: 20)
             }
             .background(
@@ -103,8 +94,11 @@ struct HomeView: View {
                         .foregroundStyle(.white)
                 }
             }
+            .onAppear {
+                viewModel.onAppear()
+            }
             .navigationDestination(isPresented: $navigateToQuestion) {
-                QuestionView()
+                QuestionView(navigateToQuestion: $navigateToQuestion)
             }
             .sheet(isPresented: $showRules) {
                 RulesView()

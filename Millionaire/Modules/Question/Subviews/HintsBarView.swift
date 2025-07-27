@@ -8,7 +8,7 @@
 import SwiftUI
 
 
-enum HintType: String, CaseIterable {
+enum HintType: String, CaseIterable, Codable, Hashable {
     case fiftyFifty = "50:50"
     case audience = "person.3"
     case phone = "phone"
@@ -22,6 +22,8 @@ struct HintsBarView: View {
     var onHeart: () -> Void = {}
     
     var onHintTapped: (HintType) -> Void = { _ in }
+    
+    var usedHints: Set<HintType> = []
     
     var body: some View {
         GeometryReader { geometry in
@@ -49,22 +51,28 @@ struct HintsBarView: View {
                 HStack(spacing: spacing) {
                     ForEach(HintType.allCases, id: \.self) { hint in
                         HintButton(action: {
-                           switch hint {
-                           case .fiftyFifty: onFiftyFifty()
-                           case .audience:   onAudience()
-                           case .phone:      onPhone()
-                           case .heart:      onHeart()
-                           }
+                            switch hint {
+                            case .fiftyFifty: onFiftyFifty()
+                            case .audience:   onAudience()
+                            case .phone:      onPhone()
+                            case .heart:      onHeart()
+                            }
                         }) {
                             ZStack {
-                                if hint == .fiftyFifty {
-                                    Text(hint.rawValue)
-                                        .foregroundColor(.white)
-                                        .font(.system(size: iconSize * 0.98, weight: .bold))
-                                } else {
-                                    Image(systemName: hint.rawValue)
+                                if usedHints.contains(hint) {
+                                    Image(systemName: "xmark")
                                         .font(.system(size: iconSize, weight: .bold))
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.gray.opacity(0.6))
+                                } else {
+                                    if hint == .fiftyFifty {
+                                        Text(hint.rawValue)
+                                            .foregroundColor(.white)
+                                            .font(.system(size: iconSize * 0.98, weight: .bold))
+                                    } else {
+                                        Image(systemName: hint.rawValue)
+                                            .font(.system(size: iconSize, weight: .bold))
+                                            .foregroundColor(.white)
+                                    }
                                 }
                             }
                             .frame(width: buttonWidth, height: buttonWidth * 64 / 84)
@@ -83,7 +91,7 @@ struct HintButton<Content: View>: View {
     let action: () -> Void
     let content: Content
     @State private var isPressed = false
-
+    
     init(
         action: @escaping () -> Void,
         @ViewBuilder content: () -> Content
@@ -91,7 +99,7 @@ struct HintButton<Content: View>: View {
         self.action = action
         self.content = content()
     }
-
+    
     var body: some View {
         Button(action: action) {
             content
