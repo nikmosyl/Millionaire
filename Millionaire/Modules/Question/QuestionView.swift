@@ -111,14 +111,17 @@ struct QuestionView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showLevels) {
-                LevelListView(navigateToQuestion: $navigateToQuestion, selectedButton: viewModel.service.gameState.currentLevel - 1)
+                LevelListView(
+                    navigateToQuestion: $navigateToQuestion,
+                    showGameOverAlert: $viewModel.showGameOverAlert,
+                    selectedButton: max(viewModel.service.gameState.currentLevel - 1, viewModel.service.saveLevel)
+                )
             }
             .navigationBarBackButtonHidden(true)
             .foregroundColor(.white)
             .onAppear {
                 viewModel.onAppear()
             }
-        //}
     }
 }
 

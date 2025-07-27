@@ -20,6 +20,7 @@ final class QuestionViewModel: ObservableObject {
     @Published var question: Question
     
     @Published var showLevels = false
+    @Published var showGameOverAlert = false
     
     @Published var selectedAnswer: Int?
     @Published var isAnswerCorrect: Bool?
@@ -97,6 +98,7 @@ final class QuestionViewModel: ObservableObject {
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.showLevels = true
+                self.showGameOverAlert = true
                 self.service.loseRaund()
             }
         }
