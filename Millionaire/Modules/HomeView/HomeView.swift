@@ -28,7 +28,7 @@ struct HomeView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.white)
                 
-                if viewModel.gameState.bestScore > 0 {
+                if !viewModel.gameState.bestScore.isEmpty {
                     VStack(spacing: 4) {
                         Text("All-time Best Score")
                             .foregroundStyle(.white.opacity(0.5))
@@ -37,7 +37,7 @@ struct HomeView: View {
                         HStack(spacing: 6) {
                             Image("dollar")
                             
-                            Text("$\(viewModel.gameState.bestScore)")
+                            Text("\(viewModel.gameState.bestScore)")
                                 .foregroundStyle(.white)
                                 .font(.title)
                                 .fontWeight(.semibold)

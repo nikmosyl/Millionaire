@@ -12,6 +12,7 @@ struct LevelListView: View {
     @Binding var navigateToQuestion: Bool
     @Binding var showGameOverAlert: Bool
     @State private var showAlert = false
+    @State private var showWinAlert = false
     
     let buttons = LevelListModel.buttons
     let selectedButton: Int
@@ -67,7 +68,8 @@ struct LevelListView: View {
             
             ToolbarItem {
                 Button(action: {
-                    // action
+                    GameService.shared.gameState.bestScore = LevelList.levels[selectedButton] ?? ""
+                    GameService.shared.saveState()
                 }) {
                     Image(.withdrawal)
                 }
@@ -82,6 +84,13 @@ struct LevelListView: View {
         }
         .alert("Game Over", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
+        } message: {
+            Text("Yor won \(LevelList.levels[GameService.shared.saveLevel] ?? "$ 0")")
+        }
+        .alert("Game Over", isPresented: $showWinAlert) {
+            Button("OK", role: .cancel) {
+                navigateToQuestion = true
+            }
         } message: {
             Text("Yor won \(LevelList.levels[GameService.shared.saveLevel] ?? "$ 0")")
         }
