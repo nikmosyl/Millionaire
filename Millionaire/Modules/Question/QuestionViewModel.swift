@@ -28,6 +28,8 @@ final class QuestionViewModel: ObservableObject {
     @Published var showPhoneAlert = false
     @Published var phoneHintText: String = ""
     
+    @Published var hasExtraLife = false
+    
     @Published var selectedAnswer: Int?
     @Published var isAnswerCorrect: Bool?
     @Published var isAnswerChecked = false
@@ -112,10 +114,17 @@ final class QuestionViewModel: ObservableObject {
                 answerStates[correct] = .correct
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self.showLevels = true
-                self.showGameOverAlert = true
-                self.service.loseRaund()
+            if hasExtraLife {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.showLevels = true
+                    self.service.winRaund()
+                }
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.showLevels = true
+                    self.showGameOverAlert = true
+                    self.service.loseRaund()
+                }
             }
         }
     }
@@ -133,14 +142,14 @@ final class QuestionViewModel: ObservableObject {
         
         print("👉 50:50 hint used")
         usedHints.insert(.fiftyFifty)
-
+        
         guard let correctIndex = answers.firstIndex(of: question.correctAnswer) else { return }
-
+        
         let incorrectIndexes = answers.indices.filter { $0 != correctIndex }
         let toDisable = incorrectIndexes.shuffled().prefix(2)
-
+        
         disabledAnswerIndexes = Set(toDisable)
-
+        
         for index in toDisable {
             answers[index] = ""
             answerStates[index] = .normal
@@ -149,47 +158,50 @@ final class QuestionViewModel: ObservableObject {
     
     func askAudience() {
         guard !usedHints.contains(.audience) else { return }
-
+        
         print("🧑‍🤝‍🧑 Audience hint used")
         usedHints.insert(.audience)
-
+        
         // 80% шанс на правильный ответ
         let isCorrect = Bool.random(probability: 0.7)
-
+        
         let suggestion: String
         if isCorrect {
             suggestion = question.correctAnswer
         } else {
             suggestion = question.incorrectAnswers.randomElement() ?? "🤷‍♂️"
         }
-
+        
         audienceHintText = "The audience thinks that the correct answer is: \"\(suggestion)\""
         showAudienceAlert = true
     }
     
     func callFriend() {
         guard !usedHints.contains(.phone) else { return }
-
+        
         print("📞 Phone a friend used")
         usedHints.insert(.phone)
-
+        
         // 70% шанс на правильный ответ
         let isCorrect = Bool.random(probability: 0.8)
-
+        
         let suggestion: String
         if isCorrect {
             suggestion = question.correctAnswer
         } else {
             suggestion = question.incorrectAnswers.randomElement() ?? "🤷‍♂️"
         }
-
+        
         phoneHintText = "A friend thinks that the correct answer is: \"\(suggestion)\""
         showPhoneAlert = true
     }
     
     func useExtraLife() {
+        guard !usedHints.contains(.heart) else { return }
+        
         print("❤️ Extra life used")
-        // TODO: implement logic
+        usedHints.insert(.heart)
+        hasExtraLife = true
     }
     
     // MARK: - Timer
