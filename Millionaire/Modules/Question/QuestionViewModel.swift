@@ -21,6 +21,8 @@ final class QuestionViewModel: ObservableObject {
     
     @Published var showLevels = false
     @Published var showGameOverAlert = false
+    @Published var showAudienceAlert = false
+    @Published var audienceHintText: String = ""
     
     @Published var selectedAnswer: Int?
     @Published var isAnswerCorrect: Bool?
@@ -142,8 +144,23 @@ final class QuestionViewModel: ObservableObject {
     }
     
     func askAudience() {
+        guard !usedHints.contains(.audience) else { return }
+
         print("🧑‍🤝‍🧑 Audience hint used")
-        // TODO: implement logic
+        usedHints.insert(.audience)
+
+        // 80% шанс на правильный ответ
+        let isCorrect = Bool.random(probability: 0.8)
+
+        let suggestion: String
+        if isCorrect {
+            suggestion = question.correctAnswer
+        } else {
+            suggestion = question.incorrectAnswers.randomElement() ?? "🤷‍♂️"
+        }
+
+        audienceHintText = "The audience thinks that the correct answer is: \"\(suggestion)\""
+        showAudienceAlert = true
     }
     
     func callFriend() {
@@ -209,4 +226,9 @@ final class QuestionViewModel: ObservableObject {
     }
 }
 
-
+extension Bool {
+    /// Возвращает true с заданной вероятностью (0.0...1.0)
+    static func random(probability: Double) -> Bool {
+        return Double.random(in: 0...1) < probability
+    }
+}

@@ -60,7 +60,9 @@ struct HintsBarView: View {
                         }) {
                             ZStack {
                                 if usedHints.contains(hint) {
-                                    EmptyView() // скрываем содержимое, или поставь Text("")
+                                    Image(systemName: "xmark")
+                                        .font(.system(size: iconSize, weight: .bold))
+                                        .foregroundColor(.gray.opacity(0.6))
                                 } else {
                                     if hint == .fiftyFifty {
                                         Text(hint.rawValue)

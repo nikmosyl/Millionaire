@@ -70,7 +70,8 @@ struct QuestionView: View {
                     onFiftyFifty: { viewModel.useFiftyFifty() },
                     onAudience: { viewModel.askAudience() },
                     onPhone: { viewModel.callFriend() },
-                    onHeart: { viewModel.useExtraLife() }
+                    onHeart: { viewModel.useExtraLife() },
+                    usedHints: viewModel.usedHints
                 )
             }
             .padding(.bottom)
@@ -124,6 +125,11 @@ struct QuestionView: View {
         .onAppear {
             viewModel.onAppear()
         }
+        .alert("Ask the audience", isPresented: $viewModel.showAudienceAlert, actions: {
+            Button("OK", role: .cancel) { }
+        }, message: {
+            Text(viewModel.audienceHintText)
+        })
     }
 }
 
