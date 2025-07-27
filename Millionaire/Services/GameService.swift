@@ -72,7 +72,10 @@ final class GameService {
     
     func loseRaund() {
         gameState.timeRemaining = 30
-        newGame()
+        gameState.currentLevel = 1
+        gameState.timeRemaining = 30
+        gameState.usedHints = []
+        saveState()
         endGame()
     }
     
