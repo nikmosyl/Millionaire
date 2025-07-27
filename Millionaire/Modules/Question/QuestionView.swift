@@ -13,115 +13,117 @@ struct QuestionView: View {
     @StateObject private var viewModel = QuestionViewModel()
     
     var body: some View {
-            VStack(spacing: 24) {
-                // MARK: - Timer
-                let timer = timerStyle(for: viewModel.timeRemaining)
+        VStack(spacing: 24) {
+            // MARK: - Timer
+            let timer = timerStyle(for: viewModel.timeRemaining)
+            
+            ZStack {
+                Capsule()
+                    .fill(timer.background)
+                    .frame(width: 91, height: 45)
                 
-                ZStack {
-                    Capsule()
-                        .fill(timer.background)
-                        .frame(width: 91, height: 45)
+                HStack(spacing: 8) {
+                    Image(systemName: "timer")
+                        .font(.system(size: 24, weight: .semibold))
                     
-                    HStack(spacing: 8) {
-                        Image(systemName: "timer")
-                            .font(.system(size: 24, weight: .semibold))
-                        
-                        Text("\(viewModel.timeRemaining)")
-                            .font(.system(size: 24, weight: .semibold))
-                    }
-                    .foregroundColor(timer.font)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 16)
+                    Text("\(viewModel.timeRemaining)")
+                        .font(.system(size: 24, weight: .semibold))
                 }
+                .foregroundColor(timer.font)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
+            }
+            
+            // MARK: - Question + Spacer
+            VStack() {
+                Text(viewModel.question.title)
+                    .font(.system(size: 24))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 32)
                 
-                // MARK: - Question + Spacer
-                VStack() {
-                    Text(viewModel.question.title)
-                        .font(.system(size: 24))
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-                    
-                    Spacer()
-                }
-                .frame(height: 147)
+                Spacer()
+            }
+            .frame(height: 147)
+            
+            // MARK: - Answers + Hints
+            VStack(spacing: 40) {
                 
-                // MARK: - Answers + Hints
-                VStack(spacing: 40) {
-                    
-                    // MARK: - Answers
-                    VStack(spacing: 16) {
-                        if viewModel.answerStates.count == viewModel.answers.count {
-                            ForEach(viewModel.answers.indices, id: \.self) { index in
-                                AnswerButtonView(
-                                    index: index,
-                                    title: viewModel.answers[index],
-                                    isDisabled: viewModel.areAnswersDisabled,
-                                    state: viewModel.answerStates[index],
-                                    onTap: { viewModel.selectAnswer(index) }
-                                )
-                            }
+                // MARK: - Answers
+                VStack(spacing: 16) {
+                    if viewModel.answerStates.count == viewModel.answers.count {
+                        ForEach(viewModel.answers.indices, id: \.self) { index in
+                            AnswerButtonView(
+                                index: index,
+                                title: viewModel.answers[index],
+                                isDisabled: viewModel.areAnswersDisabled || viewModel.disabledAnswerIndexes.contains(index),
+                                state: viewModel.answerStates[index],
+                                onTap: {
+                                    viewModel.selectAnswer(index)
+                                }
+                            )
                         }
                     }
-                    
-                    // MARK: - Hints
-                    HintsBarView(
-                        onFiftyFifty: { viewModel.useFiftyFifty() },
-                        onAudience: { viewModel.askAudience() },
-                        onPhone: { viewModel.callFriend() },
-                        onHeart: { viewModel.useExtraLife() }
-                    )
-                }
-                .padding(.bottom)
-            }
-            .padding(.bottom)
-            .background(
-                LinearGradient(colors: [Color.blue.opacity(0.9), Color.black], startPoint: .top, endPoint: .bottom)
-                    .ignoresSafeArea()
-            )
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(
-                        action: {
-                            dismiss()
-                        }) {
-                            Image(systemName: "arrow.backward")
-                                .foregroundColor(.white)
-                        }
                 }
                 
-                ToolbarItem(placement: .principal) {
-                    VStack(spacing: 2) {
-                        Text("QUESTION #\(viewModel.service.gameState.currentLevel)")
-                            .font(.headline)
-                            .foregroundColor(.white.opacity(0.5))
-                        
-                        Text(LevelList.levels[viewModel.service.gameState.currentLevel] ?? "-")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        viewModel.showLevels = true
-                    }) {
-                        Image(systemName: "line.3.horizontal")
-                            .foregroundColor(.white)
-                    }
-                }
-            }
-            .navigationDestination(isPresented: $viewModel.showLevels) {
-                LevelListView(
-                    navigateToQuestion: $navigateToQuestion,
-                    showGameOverAlert: $viewModel.showGameOverAlert,
-                    selectedButton: max(viewModel.service.gameState.currentLevel - 1, viewModel.service.saveLevel)
+                // MARK: - Hints
+                HintsBarView(
+                    onFiftyFifty: { viewModel.useFiftyFifty() },
+                    onAudience: { viewModel.askAudience() },
+                    onPhone: { viewModel.callFriend() },
+                    onHeart: { viewModel.useExtraLife() }
                 )
             }
-            .navigationBarBackButtonHidden(true)
-            .foregroundColor(.white)
-            .onAppear {
-                viewModel.onAppear()
+            .padding(.bottom)
+        }
+        .padding(.bottom)
+        .background(
+            LinearGradient(colors: [Color.blue.opacity(0.9), Color.black], startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
+        )
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(
+                    action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "arrow.backward")
+                            .foregroundColor(.white)
+                    }
             }
+            
+            ToolbarItem(placement: .principal) {
+                VStack(spacing: 2) {
+                    Text("QUESTION #\(viewModel.service.gameState.currentLevel)")
+                        .font(.headline)
+                        .foregroundColor(.white.opacity(0.5))
+                    
+                    Text(LevelList.levels[viewModel.service.gameState.currentLevel] ?? "-")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    viewModel.showLevels = true
+                }) {
+                    Image(systemName: "line.3.horizontal")
+                        .foregroundColor(.white)
+                }
+            }
+        }
+        .navigationDestination(isPresented: $viewModel.showLevels) {
+            LevelListView(
+                navigateToQuestion: $navigateToQuestion,
+                showGameOverAlert: $viewModel.showGameOverAlert,
+                selectedButton: max(viewModel.service.gameState.currentLevel - 1, viewModel.service.saveLevel)
+            )
+        }
+        .navigationBarBackButtonHidden(true)
+        .foregroundColor(.white)
+        .onAppear {
+            viewModel.onAppear()
+        }
     }
 }
 

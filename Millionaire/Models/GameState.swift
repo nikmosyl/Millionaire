@@ -9,4 +9,5 @@ struct GameState: Codable {
     var bestScore: Int = 0
     var currentLevel: Int = 0
     var timeRemaining: Int = 30
+    var usedHints: Set<HintType> = []
 }

@@ -54,7 +54,7 @@ struct LevelListView: View {
                 Button(
                     action: {
                         print("selectedButton:", selectedButton)
-                        if selectedButton < 0 ||  selectedButton > 14 {
+                        if selectedButton <= 0 || selectedButton > 14 {
                             navigateToQuestion = false
                         } else {
                             dismiss()

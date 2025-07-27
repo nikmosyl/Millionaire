@@ -29,6 +29,14 @@ final class QuestionViewModel: ObservableObject {
     
     @Published var answers: [String] = []
     @Published var answerStates: [AnswerState] = []
+    @Published var disabledAnswerIndexes: Set<Int> = []
+    
+    @Published var usedHints: Set<HintType> {
+        didSet {
+            service.gameState.usedHints = usedHints
+            service.saveState()
+        }
+    }
     
     @Published var timeRemaining = GameService.shared.gameState.timeRemaining
     private var isPaused = false
@@ -38,6 +46,8 @@ final class QuestionViewModel: ObservableObject {
     private var timer: AnyCancellable?
     
     init() {
+        usedHints = service.gameState.usedHints
+        
         if let currentQuestion = service.currentQuestion {
             print("currentQuestion", currentQuestion)
             question = currentQuestion
@@ -113,8 +123,22 @@ final class QuestionViewModel: ObservableObject {
     
     // MARK: - Hints
     func useFiftyFifty() {
+        guard !usedHints.contains(.fiftyFifty) else { return }
+        
         print("👉 50:50 hint used")
-        // TODO: implement logic
+        usedHints.insert(.fiftyFifty)
+
+        guard let correctIndex = answers.firstIndex(of: question.correctAnswer) else { return }
+
+        let incorrectIndexes = answers.indices.filter { $0 != correctIndex }
+        let toDisable = incorrectIndexes.shuffled().prefix(2)
+
+        disabledAnswerIndexes = Set(toDisable)
+
+        for index in toDisable {
+            answers[index] = ""
+            answerStates[index] = .normal
+        }
     }
     
     func askAudience() {
@@ -164,6 +188,7 @@ final class QuestionViewModel: ObservableObject {
     func onAppear() {
         timeRemaining = service.gameState.timeRemaining
         areAnswersDisabled = false
+        disabledAnswerIndexes = []
         
         if service.gameState.timeRemaining == 30 {
             question = Question(

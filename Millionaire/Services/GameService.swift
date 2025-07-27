@@ -10,7 +10,7 @@ import Foundation
 final class GameService {
     static let shared = GameService()
     
-    private let storage = StorageManager.shared
+    let storage = StorageManager.shared
     
     private lazy var currentDifficulty: DifficultyLevel = {
         switch gameState.currentLevel {
@@ -44,9 +44,15 @@ final class GameService {
         }
     }
     
+    func saveState() {
+        storage.saveSettings(gameState)
+    }
+    
     func newGame() {
         gameState.currentLevel = 1
         gameState.timeRemaining = 30
+        gameState.usedHints = []
+        saveState()
         saveLevel = 0
     }
     
@@ -66,6 +72,7 @@ final class GameService {
     
     func loseRaund() {
         gameState.timeRemaining = 30
+        newGame()
         endGame()
     }
     

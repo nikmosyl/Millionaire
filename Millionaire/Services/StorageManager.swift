@@ -41,7 +41,8 @@ final class StorageManager {
         return nil
     }
     
-    func saveQuestion(_ question: Question) {
+    func saveQuestion(_ question: Question?) {
+        guard let question else { return }
         if let encodedQuestion = try? JSONEncoder().encode(question) {
             UserDefaults.standard.set(encodedQuestion, forKey: Storage.question.rawValue)
         }
