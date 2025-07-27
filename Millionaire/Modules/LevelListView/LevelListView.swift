@@ -70,6 +70,7 @@ struct LevelListView: View {
                 Button(action: {
                     GameService.shared.gameState.bestScore = LevelList.levels[selectedButton] ?? ""
                     GameService.shared.saveState()
+                    showWinAlert = true
                 }) {
                     Image(.withdrawal)
                 }
@@ -92,7 +93,7 @@ struct LevelListView: View {
                 navigateToQuestion = true
             }
         } message: {
-            Text("Yor won \(LevelList.levels[GameService.shared.saveLevel] ?? "$ 0")")
+            Text("Yor won \(LevelList.levels[GameService.shared.gameState.currentLevel - 1] ?? "$ 0")")
         }
         
     }

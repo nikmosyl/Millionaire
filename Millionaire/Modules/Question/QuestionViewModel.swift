@@ -115,6 +115,7 @@ final class QuestionViewModel: ObservableObject {
             }
             
             if hasExtraLife {
+                hasExtraLife = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                     self.showLevels = true
                     self.service.winRaund()
@@ -258,7 +259,6 @@ final class QuestionViewModel: ObservableObject {
 }
 
 extension Bool {
-    /// Возвращает true с заданной вероятностью (0.0...1.0)
     static func random(probability: Double) -> Bool {
         return Double.random(in: 0...1) < probability
     }
