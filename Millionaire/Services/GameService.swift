@@ -25,7 +25,11 @@ final class GameService {
     
     private(set) var currentQuestion: Question?
     
-    var gameState: GameState
+    var gameState: GameState {
+        didSet {
+            print("GameService:", gameState)
+        }
+    }
     
     var saveLevel: Int = 0
     
@@ -43,6 +47,7 @@ final class GameService {
     func newGame() {
         gameState.currentLevel = 1
         gameState.timeRemaining = 30
+        saveLevel = 0
     }
     
     func winRaund() {
@@ -61,12 +66,11 @@ final class GameService {
     
     func loseRaund() {
         gameState.timeRemaining = 30
-        _ = endGame()
+        endGame()
     }
     
     
-    func endGame() -> Int {
+    func endGame() {
         gameState.currentLevel = 0
-        return saveLevel
     }
 }

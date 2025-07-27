@@ -9,12 +9,12 @@ import SwiftUI
 
 struct LevelListView: View {
     @Environment(\.dismiss) private var dismiss
+    @Binding var navigateToQuestion: Bool
     
     let buttons = LevelListModel.buttons
     let selectedButton: Int
     
     var body: some View {
-        //NavigationStack {
             VStack(spacing: 0) {
                 Image(.logo)
                     .resizable()
@@ -51,7 +51,12 @@ struct LevelListView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(
                         action: {
-                            dismiss()
+                            print("selectedButton:", selectedButton)
+                            if selectedButton < 0 ||  selectedButton > 14 {
+                                navigateToQuestion = false
+                            } else {
+                                dismiss()
+                            }
                     }) {
                         Image(systemName: "arrow.backward")
                             .foregroundColor(.white)
@@ -66,10 +71,9 @@ struct LevelListView: View {
                     }
                 }
             }
-        //}
     }
 }
 
 #Preview {
-    LevelListView(selectedButton: 1)
+    LevelListView(navigateToQuestion: .constant(false), selectedButton: 1, )
 }

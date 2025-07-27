@@ -9,10 +9,10 @@ import SwiftUI
 
 struct QuestionView: View {
     @Environment(\.dismiss) private var dismiss
+    @Binding var navigateToQuestion: Bool
     @StateObject private var viewModel = QuestionViewModel()
     
     var body: some View {
-        //NavigationStack {
             VStack(spacing: 24) {
                 // MARK: - Timer
                 let timer = timerStyle(for: viewModel.timeRemaining)
@@ -111,12 +111,12 @@ struct QuestionView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showLevels) {
-                LevelListView(selectedButton: viewModel.service.gameState.currentLevel - 1)
+                LevelListView(navigateToQuestion: $navigateToQuestion, selectedButton: viewModel.service.gameState.currentLevel - 1)
             }
             .navigationBarBackButtonHidden(true)
             .foregroundColor(.white)
             .onAppear {
-                viewModel.startTimer()
+                viewModel.onAppear()
             }
         //}
     }
@@ -207,5 +207,5 @@ extension Color {
 }
 
 #Preview {
-    QuestionView()
+    QuestionView(navigateToQuestion: .constant(false))
 }

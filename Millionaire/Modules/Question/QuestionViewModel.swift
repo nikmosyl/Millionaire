@@ -19,11 +19,12 @@ enum AnswerState {
 final class QuestionViewModel: ObservableObject {
     @Published var question: Question
     
+    @Published var showLevels = false
+    
     @Published var selectedAnswer: Int?
     @Published var isAnswerCorrect: Bool?
     @Published var isAnswerChecked = false
     @Published var areAnswersDisabled = false
-    @Published var showLevels = false
     
     @Published var answers: [String] = []
     @Published var answerStates: [AnswerState] = []
@@ -47,15 +48,15 @@ final class QuestionViewModel: ObservableObject {
                 correctAnswer: "",
                 incorrectAnswers: []
             )
+            self.pauseTimer()
             service.getQuestion { [weak self] question in
                 DispatchQueue.main.async {
                     self?.question = question
                     self?.shuffleAnswers()
+                    self?.startTimer()
                 }
             }
         }
-        
-//        startTimer()
     }
     
     func shuffleAnswers() {
@@ -83,18 +84,21 @@ final class QuestionViewModel: ObservableObject {
         
         if selected == correctIndex {
             answerStates[selected] = .correct
-            service.winRaund()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.showLevels = true
+                self.service.winRaund()
+            }
         } else {
             answerStates[selected] = .wrong
             if let correct = correctIndex {
                 answerStates[correct] = .correct
             }
             
-            service.loseRaund()
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.showLevels = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.showLevels = true
+                self.service.loseRaund()
+            }
         }
     }
     
@@ -151,7 +155,30 @@ final class QuestionViewModel: ObservableObject {
     }
     
     private func onTimeOut() {
+        showLevels = true
         service.loseRaund()
+    }
+    
+    func onAppear() {
+        timeRemaining = service.gameState.timeRemaining
+        areAnswersDisabled = false
+        
+        if service.gameState.timeRemaining == 30 {
+            question = Question(
+                difficulty: "",
+                title: "A question will appear here soon",
+                correctAnswer: "",
+                incorrectAnswers: []
+            )
+            self.pauseTimer()
+            service.getQuestion { [weak self] question in
+                DispatchQueue.main.async {
+                    self?.question = question
+                    self?.shuffleAnswers()
+                    self?.startTimer()
+                }
+            }
+        }
     }
 }
 

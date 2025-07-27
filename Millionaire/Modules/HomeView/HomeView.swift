@@ -94,8 +94,11 @@ struct HomeView: View {
                         .foregroundStyle(.white)
                 }
             }
+            .onAppear {
+                viewModel.onAppear()
+            }
             .navigationDestination(isPresented: $navigateToQuestion) {
-                QuestionView()
+                QuestionView(navigateToQuestion: $navigateToQuestion)
             }
             .sheet(isPresented: $showRules) {
                 RulesView()
