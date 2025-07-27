@@ -16,7 +16,6 @@ This app is the result of creativity and passion from the **[Devrush Swift Marat
 We hope you enjoy playing it as much as we enjoyed building it!
 
 <p align="center">
-  <img src="Assets/devrush.png" width="30" alt="Devrush"/>
   <br/>
   Want to learn more about the marathon? Check it out here: <a href="https://devrush.ru/swiftmarathon">Swift Marathon by Devrush</a>
 </p>
