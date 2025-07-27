@@ -42,6 +42,7 @@ final class GameService {
     
     func newGame() {
         gameState.currentLevel = 1
+        gameState.timeRemaining = 30
     }
     
     func winRaund() {
