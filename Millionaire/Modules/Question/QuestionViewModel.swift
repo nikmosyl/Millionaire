@@ -21,8 +21,12 @@ final class QuestionViewModel: ObservableObject {
     
     @Published var showLevels = false
     @Published var showGameOverAlert = false
+    
     @Published var showAudienceAlert = false
     @Published var audienceHintText: String = ""
+    
+    @Published var showPhoneAlert = false
+    @Published var phoneHintText: String = ""
     
     @Published var selectedAnswer: Int?
     @Published var isAnswerCorrect: Bool?
@@ -150,7 +154,7 @@ final class QuestionViewModel: ObservableObject {
         usedHints.insert(.audience)
 
         // 80% шанс на правильный ответ
-        let isCorrect = Bool.random(probability: 0.8)
+        let isCorrect = Bool.random(probability: 0.7)
 
         let suggestion: String
         if isCorrect {
@@ -164,8 +168,23 @@ final class QuestionViewModel: ObservableObject {
     }
     
     func callFriend() {
+        guard !usedHints.contains(.phone) else { return }
+
         print("📞 Phone a friend used")
-        // TODO: implement logic
+        usedHints.insert(.phone)
+
+        // 70% шанс на правильный ответ
+        let isCorrect = Bool.random(probability: 0.8)
+
+        let suggestion: String
+        if isCorrect {
+            suggestion = question.correctAnswer
+        } else {
+            suggestion = question.incorrectAnswers.randomElement() ?? "🤷‍♂️"
+        }
+
+        phoneHintText = "A friend thinks that the correct answer is: \"\(suggestion)\""
+        showPhoneAlert = true
     }
     
     func useExtraLife() {

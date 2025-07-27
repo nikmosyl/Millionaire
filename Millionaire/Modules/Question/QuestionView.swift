@@ -130,6 +130,11 @@ struct QuestionView: View {
         }, message: {
             Text(viewModel.audienceHintText)
         })
+        .alert("Позвонить другу", isPresented: $viewModel.showPhoneAlert, actions: {
+            Button("OK", role: .cancel) { }
+        }, message: {
+            Text(viewModel.phoneHintText)
+        })
     }
 }
 
