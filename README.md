@@ -11,7 +11,7 @@
 
 <h2 id="about">:memo: About the Challenge</h2>
 
-This app is the result of creativity and passion from the **[Devrush Swift Marathon XIV](https://devrush.ru/swiftmarathon)**. We poured our hearts into crafting a fun and engaging quiz experience inspired by the classic "Who Wants to Be a Millionaire?" game show.
+This app is the result of creativity and passion from the **[Devrush Swift Marathon XV](https://devrush.ru/swiftmarathon)**. We poured our hearts into crafting a fun and engaging quiz experience inspired by the classic "Who Wants to Be a Millionaire?" game show.
 
 We hope you enjoy playing it as much as we enjoyed building it!
 
