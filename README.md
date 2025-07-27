@@ -65,12 +65,3 @@ https://github.com/Aleksandr-Zhazhoyan
 https://github.com/nikmosyl
 
 ---
-
-[🔝 Back to top](#challenge-millionaire-quiz-game)
-"""
-
-file_path = "/mnt/data/Millionaire_README.txt"
-with open(file_path, "w", encoding="utf-8") as f:
-    f.write(readme_text)
-
-file_path
